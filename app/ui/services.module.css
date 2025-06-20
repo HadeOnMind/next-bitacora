@@ -1,0 +1,9 @@
+.servicesWrapper {
+  scroll-behavior: smooth;
+}
+
+/* Optional custom styles can be added here */
+.card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
