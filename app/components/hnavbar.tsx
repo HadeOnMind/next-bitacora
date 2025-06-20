@@ -7,6 +7,7 @@ export default function HorzNavbar() {
     { label: 'About', href: '/dashboard/about' },
     { label: 'Services', href: '/dashboard/services' },
     { label: 'Contact', href: '/dashboard/contact' },
+    { label: 'dev', href: '/workspace/dev' },
   ];
 
   return (
