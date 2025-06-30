@@ -62,6 +62,10 @@ type: "empty" | "image" | "text";
 };
 
 
+const cells = Array.from({ length: 6 }, (_, i) => ({
+  div: i,
+  id: i,
+}));
 
 
 
@@ -89,7 +93,7 @@ type: "empty" | "image" | "text";
 
         </div>
 
-        <div className="bg-red-400 rounded-xl ">
+        <div className="bg-red-400 rounded-xl">
 
           <div className="text-center hover:bg-amber-300">
 
@@ -99,24 +103,6 @@ type: "empty" | "image" | "text";
 
         </div>
 
-        <div className="bg-red-400 rounded-xl ">
-
-          <div className="text-center hover:bg-amber-300">
-
-            inside card 
-
-          </div>
-
-        </div>
-        <div className="bg-red-400 rounded-xl ">
-
-          <div className="text-center hover:bg-amber-300">
-
-            inside card 
-
-          </div>
-
-        </div>
         <div className="bg-red-400 rounded-xl ">
 
           <div className="text-center hover:bg-amber-300">
@@ -147,11 +133,23 @@ page2
       </div>
 
 
-      <div className='pt-16 bg-amber-200 rounded-xl'>
-        opcion 2 - mapping
+      <div className='pt-3 bg-amber-200 rounded-xl my-8'>
+        <div className='text-center'>opcion 2 - mapping</div>
 
-        <div>
-        
+        <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-4'>
+
+          {cells.map((cell) => (
+            <div key={cell.id} className='bg-slate-200 p-4 rounded-xl shadow w-1/5 hover:bg-slate-300' onClick={ToggleSelection}>
+              {cell.div ?? "Empty"}
+
+              {IsSelected ? 's' : 'n'}
+
+            </div>
+
+                        
+
+          ))}
+
         </div>
 
       </div>
