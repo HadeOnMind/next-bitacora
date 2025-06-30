@@ -68,7 +68,8 @@ type: "empty" | "image" | "text";
 
   return (
     <div className="p-10 text-black text-2xl pt-25">
-      🧪 Hello from DEV page!
+      <div>🧪 Hello from DEV page!</div>
+      
 
 
 
@@ -146,8 +147,19 @@ page2
       </div>
 
 
+      <div className='pt-16 bg-amber-200 rounded-xl'>
+        opcion 2 - mapping
 
-      <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe">
+        <div>
+        
+        </div>
+
+      </div>
+
+
+
+      <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
+      fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Merge</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         onClick={() => setType("img")}>Type Image</button>
