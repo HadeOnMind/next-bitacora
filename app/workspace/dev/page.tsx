@@ -81,20 +81,38 @@ const [Cells, SetCells] = useState<cell[]>(
     selected: false,
 })));
 
-const ToggleIndividualSelection = (id: number) => {
-
-    SetCells(e =>(e.map(cell =>
-      cell.id === id ? { ...cell, selected: !cell.selected } : cell
-    )
-  )
-);
+const ToggleGlobalSelection = () => {
+  SetCells(prev =>
+    prev.map(cell => ({
+      ...cell,
+      selected: !cell.selected
+    }))
+  );
 console.log("Selected cell")
 };
 
 
-const HandleMerge = () => {
+const ToggleIndividualSelection = (id: number) => {
+
+    SetCells(e =>(e.map(cell =>
+      cell.id === id ? { ...cell, selected: !cell.selected } : cell,
+      console.log("Selected cell: " + id)
+    )
+  )
+)
+};
+
+const HandleMerge = (id: number, col: number) => {
+    const Fila = Math.floor(id / 2);
+    const Columna = id % 2;
+
+    const neighborCol = Columna + 1;
+    const neighborId = Fila * col + neighborCol;
 
 };
+
+
+
 
 
   return (
@@ -166,7 +184,7 @@ page2
         <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-4'>
 
           {Cells.map((cell) => (
-            <div key={cell.id} className='bg-slate-200 p-4 rounded-xl shadow w-1/5 hover:bg-slate-300' onClick={() => ToggleIndividualSelection(cell.id)}>
+            <div key={cell.id} className='bg-slate-200 p-4 rounded-xl shadow w-1/5 hover:bg-slate-300 select-none' onClick={() => ToggleIndividualSelection(cell.id)}>
 
               Cell {cell.id},
 
@@ -185,7 +203,8 @@ page2
 
 
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
-      fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
+        fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
+
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Merge</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         onClick={() => setType("img")}>Type Image</button>
@@ -193,11 +212,13 @@ page2
         onClick={() => setType("text")}>Type Text</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         onClick={() => setType("canvas")}>Type Canvas</button>
+        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={ToggleGlobalSelection}>Select All</button>
+        
       </div>
 
       
 
     
     </div>
-  );
-}
+
+  );}
