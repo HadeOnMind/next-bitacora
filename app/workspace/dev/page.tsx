@@ -1,4 +1,5 @@
 "use client"
+import { stringify } from 'querystring';
 import { useState } from 'react';
 import { text } from 'stream/consumers';
 
@@ -14,6 +15,11 @@ if(IsSelected){
   console.log("SELECCIONADO")
 }
 };
+
+
+
+
+
 
 
 const [IsMerged, setIsMerged] = useState(false);
@@ -58,16 +64,37 @@ row: number,
 col: number,
 masterId: number,
 merged: boolean,
+selected: boolean,
 type: "empty" | "image" | "text";
 };
 
 
-const cells = Array.from({ length: 6 }, (_, i) => ({
-  div: i,
-  id: i,
-}));
+const [Cells, SetCells] = useState<cell[]>(
+  Array.from({ length: 6 }, (_, i) => ({
+    div: i,
+    id: i,
+    row: 0,
+    col: i,
+    masterId: i,
+    merged: false,
+    type: "empty",
+    selected: false,
+})));
+
+const ToggleIndividualSelection = (id: number) => {
+
+    SetCells(e =>(e.map(cell =>
+      cell.id === id ? { ...cell, selected: !cell.selected } : cell
+    )
+  )
+);
+console.log("Selected cell")
+};
 
 
+const HandleMerge = () => {
+
+};
 
 
   return (
@@ -138,11 +165,12 @@ page2
 
         <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-4'>
 
-          {cells.map((cell) => (
-            <div key={cell.id} className='bg-slate-200 p-4 rounded-xl shadow w-1/5 hover:bg-slate-300' onClick={ToggleSelection}>
-              {cell.div ?? "Empty"}
+          {Cells.map((cell) => (
+            <div key={cell.id} className='bg-slate-200 p-4 rounded-xl shadow w-1/5 hover:bg-slate-300' onClick={() => ToggleIndividualSelection(cell.id)}>
 
-              {IsSelected ? 's' : 'n'}
+              Cell {cell.id},
+
+              {cell.selected ? "s" : "n"}
 
             </div>
 
