@@ -22,7 +22,19 @@ if(IsSelected){
 
 
 
-const [IsMerged, setIsMerged] = useState(false);
+
+
+const [Merging, setMerging] = useState(false);
+
+const MergingSet = () => {
+  setMerging(!Merging)
+
+  if(Merging){
+    console.log("Merging activated")
+  } else {
+    console.log("Mergin Desactivated")
+  }
+};
 
 const type = ["none",
   "text",
@@ -187,68 +199,10 @@ const MergeSelected = () => {
   return (
     <div className="p-10 text-black text-2xl pt-25">
       <div>🧪 Hello from DEV page!</div>
-      
-
-
-
-
-
-      <div className="pt-8 bg-amber-500 grid grid-cols-2 gap-6">
-
-
-        <div className="bg-red-400 rounded-xl ">
-
-          <div  onClick={ToggleSelection} className="text-center hover:bg-amber-300 rounded-xl" >
-        
-        {IsSelected ? 'Selected' : 'Not Selected'}, 
-        {currenType}
-
-          </div>
-
-        </div>
-
-        <div className="bg-red-400 rounded-xl">
-
-          <div className="text-center hover:bg-amber-300">
-
-            inside card 
-
-          </div>
-
-        </div>
-
-        <div className="bg-red-400 rounded-xl ">
-
-          <div className="text-center hover:bg-amber-300">
-
-            inside card 
-
-          </div>
-
-        </div>
-        <div className="bg-red-400 rounded-xl ">
-
-          <div className="text-center hover:bg-amber-300">
-
-            inside card 
-
-          </div>
-
-        </div>
-        
-
-
-
-      </div>
-
-
-      <div className="pt-8 bg-amber-400">
-page2
-      </div>
-
 
       <div className='pt-3 bg-amber-200 rounded-xl my-8'>
-      <div className='text-center'>opcion 2 - mapping</div>
+         
+      <div className='text-center'>opcion 1 - mapping</div>
 
        <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-4'>
           {Cells.map((cell) =>
@@ -267,11 +221,42 @@ page2
       </div>
 
 
+      <div className='pt-3 bg-amber-200 rounded-xl my-8'>
+        <div className='text-center'>opcion 2 - checkbox merge</div>
+
+        <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-3'>
+          {Cells.map((cell) =>
+            !cell.hidden && (
+              <div
+                key={cell.id}
+                className={`select-none 
+                  ${cell.span !== "empty" ? cell.span : "col-span-1"} ${cell.hidden ? "hidden" : ""} ${Merging ? 'bg-slate-400 p-4 rounded-xl shadow-2xl' : 'bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none w-1/4'}`}
+              >
+                Cell {cell.id}, {cell.selected ? "s" : "n"}
+
+
+                {Merging && (
+                <input
+                  type="checkbox"
+                  className="absolute top-1 right-1 w-4 h-4"
+                  />
+                )}
+
+              </div>
+            )
+          )}
+        </div>
+        
+
+      </div>
+
+
 
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
         fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
 
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergeSelected} >Merge</button>
+        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergingSet} >Merge2</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         onClick={() => setType("img")}>Type Image</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
