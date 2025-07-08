@@ -7,22 +7,6 @@ import { text } from 'stream/consumers';
 
 export default function DevPage() {
 
-const [IsSelected, setIsSelected] = useState(false);
-
-const ToggleSelection = () => {
-setIsSelected(!IsSelected);
-if(IsSelected){
-  console.log("SELECCIONADO")
-}
-};
-
-
-
-
-
-
-
-
 
 const [Merging, setMerging] = useState(false);
 
@@ -32,7 +16,7 @@ const MergingSet = () => {
   if(Merging){
     console.log("Merging activated")
   } else {
-    console.log("Mergin Desactivated")
+    console.log("Merging Deactivated")
   }
 };
 
@@ -42,32 +26,7 @@ const type = ["none",
   "canvas",
 ];
 
-const [currenType, SetCurrenType] = useState("none")
 
-const setType = (type: string) => {
-    switch (type) {
-      case "none":
-        SetCurrenType(type[0]);
-        console.log(currenType)
-        break;
-      case "text":
-        SetCurrenType(type[1]);
-        console.log(currenType)
-        break;
-      case "img":
-        SetCurrenType(type[2]);
-        console.log(currenType)
-        break;
-      case "canvas":
-        SetCurrenType(type[3]);
-        console.log(currenType)
-        break;
-      default:
-        SetCurrenType(type[0]);
-        console.log(currenType)
-        break;
-    }
-};
 
 
 type cell = {
@@ -79,16 +38,18 @@ merged: boolean,
 selected: boolean,
 span: string,
 hidden: boolean,
-type: "empty" | "image" | "text";
+type: "empty" | "image" | "text" | "canvas",
 };
 
+const rowCount = 2;
+const colCount = 3;
 
 const [Cells, SetCells] = useState<cell[]>(
-  Array.from({ length: 6 }, (_, i) => ({
+  Array.from({ length: rowCount * colCount }, (_, i) => ({
     div: i,
     id: i,
-    row: 0,
-    col: i,
+    row: Math.floor(i / colCount),
+    col: i % colCount,
     masterId: i,
     merged: false,
     type: "empty",
@@ -110,12 +71,19 @@ console.log("Selected cell")
 
 const ToggleIndividualSelection = (id: number) => {
 
-    SetCells(e =>(e.map(cell =>
+    SetCells(p => p.map(cell =>
       cell.id === id ? { ...cell, selected: !cell.selected } : cell,
-      console.log("Selected cell: " + id)
     )
   )
-)
+
+  const selectedCell = Cells[id];
+
+  if (selectedCell.selected) {
+      console.log("Unselected cell: " + id)
+  } else {
+        console.log("Selected cell: " + id)
+  }
+
 };
 
 
@@ -195,12 +163,42 @@ const MergeSelected = () => {
 
 
 
+const [currenType, SetCurrenType] = useState<"text" | "image" | "canvas" | "empty">("empty");
+
+const setType = (type: "text" | "image" | "canvas" | "empty") => {
+  const SelectedCells = Cells.some(cell => cell.selected);
+  const mergedCells = Cells.some(cell => cell.merged);
+
+
+  if (!SelectedCells) {
+    console.log("No selected cells to apply type.");
+    return;
+  } else if (mergedCells) {
+    console.log("One or many cells are merged, imposible to change type for now");
+    console.log("Merged cells: ", mergedCells)
+    return;
+  }
+
+  SetCells(prev =>
+    prev.map(cell => {
+      if (cell.selected) {
+        console.log(`Cell ${cell.id} type set to: ${type}`);
+        return { ...cell, type };
+      }
+      return cell;
+    })
+  );
+
+  SetCurrenType(type);
+};
+
+
 
   return (
     <div className="p-10 text-black text-2xl pt-25">
       <div>🧪 Hello from DEV page!</div>
 
-      <div className='pt-3 bg-amber-200 rounded-xl my-8'>
+      <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-4'>
          
       <div className='text-center'>opcion 1 - mapping</div>
 
@@ -209,10 +207,10 @@ const MergeSelected = () => {
             !cell.hidden && (
               <div
                 key={cell.id}
-                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none ${cell.span !== "empty" ? cell.span : "col-span-1"} ${cell.hidden ? "hidden" : ""}`}
+                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none ${cell.span !== "empty" ? cell.span : "col-span-1"} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""}`}
                 onClick={() => ToggleIndividualSelection(cell.id)}
               >
-                Cell {cell.id}, {cell.selected ? "s" : "n"}
+                Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
               </div>
             )
           )}
@@ -220,8 +218,8 @@ const MergeSelected = () => {
 
       </div>
 
-
-      <div className='pt-3 bg-amber-200 rounded-xl my-8'>
+          
+      <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-4'>
         <div className='text-center'>opcion 2 - checkbox merge</div>
 
         <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-3'>
@@ -233,15 +231,7 @@ const MergeSelected = () => {
                   ${cell.span !== "empty" ? cell.span : "col-span-1"} ${cell.hidden ? "hidden" : ""} ${Merging ? 'bg-slate-400 p-4 rounded-xl shadow-2xl' : 'bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none w-1/4'}`}
               >
                 Cell {cell.id}, {cell.selected ? "s" : "n"}
-
-
-                {Merging && (
-                <input
-                  type="checkbox"
-                  className="absolute top-1 right-1 w-4 h-4"
-                  />
-                )}
-
+                
               </div>
             )
           )}
@@ -249,7 +239,7 @@ const MergeSelected = () => {
         
 
       </div>
-
+            
 
 
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
@@ -258,7 +248,7 @@ const MergeSelected = () => {
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergeSelected} >Merge</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergingSet} >Merge2</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        onClick={() => setType("img")}>Type Image</button>
+        onClick={() => setType("image")}>Type Image</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         onClick={() => setType("text")}>Type Text</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
