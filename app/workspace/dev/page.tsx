@@ -105,14 +105,13 @@ const HandleMerge = (id: number, colCount: number) => {
   SetCells(prev => {
     const updated = [...prev];
     const current = updated.find(cell => cell.id === id);
+
     if (!current) return updated;
-
-
 
     const { row, col } = current;
     const neighborCol = col + 1;
-
     const neighbor = updated.find(c => c.row === row && c.col === neighborCol);
+
     if (!neighbor) {
       console.log("No valid neighbor to the right for merging");
       return updated;
@@ -162,7 +161,7 @@ const MergeSelected = () => {
             span: "empty",
             merged: false,
             hidden: false,
-            masterId: cell.id // reset master
+            masterId: cell.id
           };
         }
         return cell;
@@ -171,22 +170,25 @@ const MergeSelected = () => {
   }
 };
 
-
+const areCellsContiguous = (selected: cell[]) => {
+  const sameRow = selected.every(c => c.row === selected[0].row);
+  const sorted = [...selected].sort((a, b) => a.col - b.col);
+  const contiguous = sorted.every((c, i) =>
+    i === 0 || c.col === sorted[i - 1].col + 1
+  );
+  return sameRow && contiguous;
+};
 
 
 const [currenType, SetCurrenType] = useState<"text" | "image" | "canvas" | "empty">("empty");
 
 const setType = (type: "text" | "image" | "canvas" | "empty") => {
   const SelectedCells = Cells.some(cell => cell.selected);
-  const mergedCells = Cells.some(cell => cell.merged);
+
 
 
   if (!SelectedCells) {
     console.log("No selected cells to apply type.");
-    return;
-  } else if (mergedCells) {
-    console.log("One or many cells are merged, imposible to change type for now");
-    console.log("Merged cells: ", mergedCells)
     return;
   }
 
@@ -209,16 +211,19 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
     <div className="p-10 text-black text-2xl pt-25">
       <div>🧪 Hello from DEV page!</div>
 
-      <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-4'>
-         
       <div className='text-center'>opcion 1 - mapping</div>
 
-       <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-4'>
+
+      <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
+         
+
+       <div className='grid grid-cols-2 grid-rows-3 gap-2 max-w-4xl mx-auto'>
           {Cells.map((cell) =>
             !cell.hidden && (
               <div
                 key={cell.id}
-                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none ${cell.span !== "empty" ? cell.span : "col-span-1"} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""}`}
+                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none h-full w-full
+                  ${cell.span !== "empty" ? cell.span : "col-span-1 place-items-center "} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""}`}
                 onClick={() => ToggleIndividualSelection(cell.id)}
               >
                 Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
