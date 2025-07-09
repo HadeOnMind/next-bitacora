@@ -1,12 +1,10 @@
 "use client"
+import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
 import { useState } from 'react';
 import { text } from 'stream/consumers';
 
-
-
 export default function DevPage() {
-
 
 const [Merging, setMerging] = useState(false);
 
@@ -25,9 +23,6 @@ const type = ["none",
   "img",
   "canvas",
 ];
-
-
-
 
 type cell = {
 id: number,
@@ -58,6 +53,25 @@ const [Cells, SetCells] = useState<cell[]>(
     selected: false,
 })));
 
+type pages = {
+  id: Number,
+  idBook: Number,
+  masterId: Number,
+  active: Boolean,
+  widht: Number,
+  height: Number
+};
+
+type books = {
+  id: Number,
+  user: String,
+  pages: Number,
+  name: String,
+  createdAt: String,
+  updatedAt: String,
+};
+
+
 const ToggleGlobalSelection = () => {
   SetCells(prev =>
     prev.map(cell => ({
@@ -67,7 +81,6 @@ const ToggleGlobalSelection = () => {
   );
 console.log("Selected cell")
 };
-
 
 const ToggleIndividualSelection = (id: number) => {
 
@@ -85,8 +98,6 @@ const ToggleIndividualSelection = (id: number) => {
   }
 
 };
-
-
 
 const HandleMerge = (id: number, colCount: number) => {
   console.log("Attempting merge for ID:", id);
@@ -218,7 +229,6 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
 
       </div>
 
-          
       <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-4'>
         <div className='text-center'>opcion 2 - checkbox merge</div>
 
@@ -237,10 +247,7 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
           )}
         </div>
         
-
       </div>
-            
-
 
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
         fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
@@ -256,9 +263,6 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={ToggleGlobalSelection}>Select All</button>
         
       </div>
-
-      
-
     
     </div>
 
