@@ -34,10 +34,11 @@ selected: boolean,
 span: string,
 hidden: boolean,
 type: "empty" | "image" | "text" | "canvas",
+canMerge: boolean,
 };
 
-const rowCount = 2;
-const colCount = 3;
+const rowCount = 3;
+const colCount = 2;
 
 const [Cells, SetCells] = useState<cell[]>(
   Array.from({ length: rowCount * colCount }, (_, i) => ({
@@ -50,6 +51,7 @@ const [Cells, SetCells] = useState<cell[]>(
     type: "empty",
     span: "empty",
     hidden: false,
+    canMerge: false,
     selected: false,
 })));
 
@@ -117,6 +119,9 @@ const HandleMerge = (id: number, colCount: number) => {
       return updated;
     }
 
+      
+
+
     return updated.map(cell => {
       if (cell.id === current.id) {
         return {
@@ -141,15 +146,23 @@ const HandleMerge = (id: number, colCount: number) => {
 
 
 const MergeSelected = () => {
-  const selected = Cells.find(cell => cell.selected);
+  const selected = Cells.find(cell => cell.selected); // ARREGLAR ESTO
 
-  if (!selected) {
-        console.log("No cell selected to merge from.");
+  const selectedCells = Cells.filter(cell => cell.selected); // PROBAR CON ESTO
+
+{/*  if (!selected) {
+        console.log("No cell selected to merge from.");     //QUITAR
         return;
+  }
+*/}
+
+  if(selectedCells.length === 0){
+    alert("NO CELL SELECTED TO MERGE FROM");
+    return;
   }
 
   if (!selected.merged) {
-    HandleMerge(selected.id, 2);
+    HandleMerge(selected.id, colCount);
   } else {
     const masterId = selected.masterId
     
@@ -223,7 +236,7 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
               <div
                 key={cell.id}
                 className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none h-full w-full
-                  ${cell.span !== "empty" ? cell.span : "col-span-1 place-items-center "} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""}`}
+                  ${cell.span !== "empty" ? cell.span : "col-span-1 place-items-center "} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-amber-200" : ""}`}
                 onClick={() => ToggleIndividualSelection(cell.id)}
               >
                 Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
