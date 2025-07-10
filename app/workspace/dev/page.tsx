@@ -145,16 +145,15 @@ const HandleMerge = (id: number, colCount: number) => {
 };
 
 
-const MergeSelected = () => {
+const MergeSelected1 = () => {
   const selected = Cells.find(cell => cell.selected); // ARREGLAR ESTO
 
   const selectedCells = Cells.filter(cell => cell.selected); // PROBAR CON ESTO
 
-{/*  if (!selected) {
+  if (!selected) {
         console.log("No cell selected to merge from.");     //QUITAR
         return;
   }
-*/}
 
   if(selectedCells.length === 0){
     alert("NO CELL SELECTED TO MERGE FROM");
@@ -183,13 +182,67 @@ const MergeSelected = () => {
   }
 };
 
+//test
+const MergeSelected = () => {
+  const selectedCells = Cells.filter(cell => cell.selected);
+  const mergedCells = Cells.some(cell => cell.merged)
+
+  if (selectedCells.length < 2) {
+    alert("Not enough cells selected");
+    return;
+  }
+
+
+  if (mergedCells) {
+    alert("One or many cells are merged");
+    return;
+  }
+
+
+  if (!areCellsContiguous(selectedCells)) {
+    alert("Selected cells are not contiguous in the same row.");
+    return;
+  }
+
+  const master = selectedCells[0];
+
+  SetCells(prev =>
+    prev.map(cell => {
+      if (selectedCells.some(sc => sc.id === cell.id)) {
+        if (cell.id === master.id) {
+          return {
+            ...cell,
+            span: `col-span-${selectedCells.length}`,
+            merged: true,
+            masterId: master.id
+          };
+        } else {
+          return {
+            ...cell,
+            hidden: true,
+            merged: true,
+            masterId: master.id
+          };
+        }
+      }
+      return cell;
+    })
+  );
+};
+
+
+
 const areCellsContiguous = (selected: cell[]) => {
+
   const sameRow = selected.every(c => c.row === selected[0].row);
   const sorted = [...selected].sort((a, b) => a.col - b.col);
+
   const contiguous = sorted.every((c, i) =>
     i === 0 || c.col === sorted[i - 1].col + 1
-  );
+);
+
   return sameRow && contiguous;
+
 };
 
 
