@@ -101,15 +101,9 @@ const ToggleIndividualSelection = (id: number) => {
         console.log("Selected cell: " + id)
   }
 
-
-  //TRABAJAR EN ESTO !!! URGENTE
-  const selectedCells = Cells.filter(cell => cell.selected);
-  if(!areCellsContiguous(selectedCells)){}
-
-
-  
-
 };
+
+
 
 const HandleMerge = (id: number, colCount: number) => {
   console.log("Attempting merge for ID:", id);
@@ -154,69 +148,55 @@ const HandleMerge = (id: number, colCount: number) => {
   });
 };
 
-// anterior merge
-const MergeSelected1 = () => {
-  const selected = Cells.find(cell => cell.selected); // ARREGLAR ESTO
-
-  const selectedCells = Cells.filter(cell => cell.selected); // PROBAR CON ESTO
-
-  if (!selected) {
-        console.log("No cell selected to merge from.");     //QUITAR
-        return;
-  }
-
-  if(selectedCells.length === 0){
-    alert("NO CELL SELECTED TO MERGE FROM");
-    return;
-  }
-
-  if (!selected.merged) {
-    HandleMerge(selected.id, colCount);
-  } else {
-    const masterId = selected.masterId
-    
-     SetCells(prev =>
-      prev.map(cell => {
-        if (cell.masterId === masterId) {
-          return {
-            ...cell,
-            span: "empty",
-            merged: false,
-            hidden: false,
-            masterId: cell.id
-          };
-        }
-        return cell;
-      })
-    );
-  }
-};
-
 //actual merge - testeando
 
 
 const MergeSelected = () => {
   const selectedCells = Cells.filter(cell => cell.selected);
   const mergedCells = Cells.some(cell => cell.merged)
+  const mergedSelectedCells = Cells.some(cell => cell.merged && cell.selected)
 
-  if (selectedCells.length < 2) {
+
+  if (selectedCells.length < 2 && mergedSelectedCells) {
+    alert("The selected cell is already merged!!");
+    return;
+  } else if (selectedCells.length < 2) {
     alert("Not enough cells selected");
     return;
   }
 
 
-  if (mergedCells) {
+  if (mergedSelectedCells) {
     alert("One or many cells are merged");
     return;
   }
 
 
-  if (!areCellsContiguous(selectedCells)) {
+  if (!areCellsContiguousX(selectedCells) && !areCellsContiguousY(selectedCells ) && !areCellsContiguousXY(selectedCells)) {
     alert("Selected cells are not contiguous in the same row.");
     return;
   }
 
+
+
+
+  let spanClass = "empty";
   const master = selectedCells[0];
+
+
+  if (areCellsContiguousXY(selectedCells)) {
+    const cols = new Set(selectedCells.map(c => c.col)).size;
+    const rows = new Set(selectedCells.map(c => c.row)).size;
+    spanClass = `col-span-${cols} row-span-${rows}`;
+  } else if (areCellsContiguousX(selectedCells)) {
+    spanClass = `col-span-${selectedCells.length}`;
+  } else if (areCellsContiguousY(selectedCells)) {
+    spanClass = `row-span-${selectedCells.length}`;
+  }
+
+
+
+
 
   SetCells(prev =>
     prev.map(cell => {
@@ -224,9 +204,10 @@ const MergeSelected = () => {
         if (cell.id === master.id) {
           return {
             ...cell,
-            span: `col-span-${selectedCells.length}`,
+            span: spanClass,
             merged: true,
-            masterId: master.id
+            masterId: master.id,
+            type: 'empty'
           };
         } else {
           return {
@@ -252,7 +233,7 @@ const MergeSelected = () => {
 
 
 
-const areCellsContiguous = (selected: cell[]) => {
+const areCellsContiguousX = (selected: cell[]) => {
 
   const sameRow = selected.every(c => c.row === selected[0].row);
   const sorted = [...selected].sort((a, b) => a.col - b.col);
@@ -264,6 +245,39 @@ const areCellsContiguous = (selected: cell[]) => {
   return sameRow && contiguous;
 
 };
+
+
+const areCellsContiguousY = (selected: cell[]) => {
+  const sameCol = selected.every(c => c.col === selected[0].col);
+  const sorted = [...selected].sort((a, b) => a.row - b.row);
+
+  const contiguous = sorted.every((c, i) =>
+    i === 0 || c.row === sorted[i - 1].row + 1
+  );
+
+  return sameCol && contiguous;
+};
+
+const areCellsContiguousXY = (selected: cell[]) => {
+  if (selected.length < 2) return false;
+
+  const rows = [...new Set(selected.map(c => c.row))].sort((a, b) => a - b);
+  const cols = [...new Set(selected.map(c => c.col))].sort((a, b) => a - b);
+
+  const rowsContiguous = rows.every((r, i) =>
+    i === 0 || r === rows[i - 1] + 1
+  );
+  const colsContiguous = cols.every((c, i) =>
+    i === 0 || c === cols[i - 1] + 1
+  );
+
+  const expectedCount = rows.length * cols.length;
+
+  return rowsContiguous && colsContiguous && selected.length === expectedCount;
+};
+
+
+
 
 
 
@@ -345,13 +359,13 @@ const UnmergeSelected = () => {
       <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
          
 
-       <div className='grid grid-cols-2 grid-rows-3 gap-2 max-w-4xl mx-auto'>
+       <div className='grid grid-cols-2 grid-rows-3 gap-2 max-w-4xl mx-auto auto-rows-fr'>
           {Cells.map((cell) =>
             !cell.hidden && (
               <div
                 key={cell.id}
                 className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none h-full w-full
-                  ${cell.span !== "empty" ? cell.span : "col-span-1 place-items-center "} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-amber-200" : ""}`}
+                  ${cell.span !== "empty" ? cell.span : "col-span-1 place-items-center "} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-blue-400" : ""}`}
                 onClick={() => ToggleIndividualSelection(cell.id)}
               >
                 Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
