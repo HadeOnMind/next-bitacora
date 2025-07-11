@@ -78,7 +78,9 @@ const ToggleGlobalSelection = () => {
   SetCells(prev =>
     prev.map(cell => ({
       ...cell,
-      selected: !cell.selected
+      selected: !cell.selected,
+      canMerge: false,
+      
     }))
   );
 console.log("Selected cell")
@@ -88,16 +90,24 @@ const ToggleIndividualSelection = (id: number) => {
 
     SetCells(p => p.map(cell =>
       cell.id === id ? { ...cell, selected: !cell.selected } : cell,
+
     )
+    
   )
-
   const selectedCell = Cells[id];
-
   if (selectedCell.selected) {
       console.log("Unselected cell: " + id)
   } else {
         console.log("Selected cell: " + id)
   }
+
+
+  //TRABAJAR EN ESTO !!! URGENTE
+  const selectedCells = Cells.filter(cell => cell.selected);
+  if(!areCellsContiguous(selectedCells)){}
+
+
+  
 
 };
 
@@ -144,7 +154,7 @@ const HandleMerge = (id: number, colCount: number) => {
   });
 };
 
-
+// anterior merge
 const MergeSelected1 = () => {
   const selected = Cells.find(cell => cell.selected); // ARREGLAR ESTO
 
@@ -182,7 +192,9 @@ const MergeSelected1 = () => {
   }
 };
 
-//test
+//actual merge - testeando
+
+
 const MergeSelected = () => {
   const selectedCells = Cells.filter(cell => cell.selected);
   const mergedCells = Cells.some(cell => cell.merged)
@@ -221,13 +233,21 @@ const MergeSelected = () => {
             ...cell,
             hidden: true,
             merged: true,
-            masterId: master.id
+            masterId: master.id,
+            selected: false
           };
         }
       }
       return cell;
     })
   );
+
+
+
+  if (selectedCells.length === 0) {
+    alert("Select at least one merged cell to unmerge.");
+    return;
+  }
 };
 
 
@@ -244,6 +264,9 @@ const areCellsContiguous = (selected: cell[]) => {
   return sameRow && contiguous;
 
 };
+
+
+
 
 
 const [currenType, SetCurrenType] = useState<"text" | "image" | "canvas" | "empty">("empty");
@@ -270,6 +293,45 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
 
   SetCurrenType(type);
 };
+
+
+const UnmergeSelected = () => {
+  const selectedCells = Cells.filter(cell => cell.selected);
+
+  if (selectedCells.length === 0) {
+    alert("Select at least one merged cell to unmerge.");
+    return;
+  }
+
+
+  const masterIds = new Set(
+    selectedCells.filter(cell => cell.merged).map(cell => cell.masterId)
+  );
+
+  if (masterIds.size === 0) {
+    alert("No merged cells selected.");
+    return;
+  }
+
+  SetCells(prev =>
+    prev.map(cell => {
+      if (masterIds.has(cell.masterId)) {
+        return {
+          ...cell,
+          span: "empty",
+          merged: false,
+          hidden: false,
+          masterId: cell.id,
+          selected: false
+        };
+      }
+      return cell;
+    })
+  );
+
+  console.log("Unmerged cells with masterIds:", [...masterIds].join(", "));
+};
+
 
 
 
@@ -300,31 +362,11 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
 
       </div>
 
-      <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-4'>
-        <div className='text-center'>opcion 2 - checkbox merge</div>
-
-        <div className='grid grid-cols-2 grid-rows-3 place-items-center gap-3'>
-          {Cells.map((cell) =>
-            !cell.hidden && (
-              <div
-                key={cell.id}
-                className={`select-none 
-                  ${cell.span !== "empty" ? cell.span : "col-span-1"} ${cell.hidden ? "hidden" : ""} ${Merging ? 'bg-slate-400 p-4 rounded-xl shadow-2xl' : 'bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none w-1/4'}`}
-              >
-                Cell {cell.id}, {cell.selected ? "s" : "n"}
-                
-              </div>
-            )
-          )}
-        </div>
-        
-      </div>
-
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
         fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
 
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergeSelected} >Merge</button>
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergingSet} >Merge2</button>
+        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={UnmergeSelected} >Unmerge</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         onClick={() => setType("image")}>Type Image</button>
         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
