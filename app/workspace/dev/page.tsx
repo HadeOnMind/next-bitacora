@@ -333,6 +333,33 @@ const UnmergeSelected = () => {
 };
 
 
+const getGridPositionStyle = (cell) => {
+return {
+gridRow: `${cell.row + 1}`,
+gridColumn: `${cell.col + 1}`,
+};
+};
+
+
+
+
+const getCellClasses = (cell) => {
+  let classes = "bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none min-h-[3rem] h-full w-full ";
+  if (cell.span !== "empty") {
+  classes += `${cell.span} `;
+  }
+  if (cell.hidden) {
+  classes += "invisible ";
+  }
+  if (cell.selected) {
+  classes += "border-4 border-emerald-500 ";
+  }
+  if (cell.canMerge) {
+  classes += "border-2 border-blue-400 ";
+  }
+  return classes;
+  };
+
 
 
   return (
@@ -346,18 +373,16 @@ const UnmergeSelected = () => {
          
 
        <div className='grid grid-cols-2 gap-2 max-w-4xl mx-auto grid-rows-3 h-[400px] border border-red-300'>
-          {Cells.map((cell) =>
-            !cell.hidden && (
-              <div
-                key={cell.id}
-                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none min-h-[3rem] h-full w-full
-                  ${cell.span !== "empty" ? `${cell.span} h-full` : "col-span-1 place-items-center h-full"} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-blue-400" : ""}`}
-                onClick={() => ToggleIndividualSelection(cell.id)}
-              >
-                Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
-              </div>
-            )
-          )}
+          {Cells.map((cell) => ( 
+            <div
+            key={cell.id}
+            className={getCellClasses(cell)}
+            style={getGridPositionStyle(cell)} 
+            onClick={() => ToggleIndividualSelection(cell.id)}
+            >
+            ...
+            </div>
+            ))}
         </div>
 
       </div>
