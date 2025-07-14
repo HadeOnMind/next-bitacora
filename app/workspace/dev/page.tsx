@@ -55,23 +55,7 @@ const [Cells, SetCells] = useState<cell[]>(
     selected: false,
 })));
 
-type pages = {
-  id: Number,
-  idBook: Number,
-  masterId: Number,
-  active: Boolean,
-  widht: Number,
-  height: Number
-};
 
-type books = {
-  id: Number,
-  user: String,
-  pages: Number,
-  name: String,
-  createdAt: String,
-  updatedAt: String,
-};
 
 
 const ToggleGlobalSelection = () => {
@@ -167,7 +151,7 @@ const MergeSelected = () => {
 
 
   if (mergedSelectedCells) {
-    alert("One or many cells are merged");
+    alert("One or many cells are already merged");
     return;
   }
 
@@ -311,21 +295,23 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
 
 const UnmergeSelected = () => {
   const selectedCells = Cells.filter(cell => cell.selected);
+  const mergedSelectedCells = Cells.some(cell => cell.merged && cell.selected)
+  const masterIds = new Set(
+      selectedCells.filter(cell => cell.merged).map(cell => cell.masterId)
+    );
 
-  if (selectedCells.length === 0) {
+
+  if (!mergedSelectedCells) {
+    alert("One of the selected cells is already unmerged");
+  } else if (selectedCells.length === 0) {
     alert("Select at least one merged cell to unmerge.");
     return;
-  }
-
-
-  const masterIds = new Set(
-    selectedCells.filter(cell => cell.merged).map(cell => cell.masterId)
-  );
-
-  if (masterIds.size === 0) {
+  } else if (masterIds.size === 0) {
     alert("No merged cells selected.");
     return;
-  }
+  } 
+
+  
 
   SetCells(prev =>
     prev.map(cell => {
@@ -359,13 +345,13 @@ const UnmergeSelected = () => {
       <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
          
 
-       <div className='grid grid-cols-2 grid-rows-3 gap-2 max-w-4xl mx-auto auto-rows-fr'>
+       <div className='grid grid-cols-2 gap-2 max-w-4xl mx-auto grid-rows-3 h-[400px] border border-red-300'>
           {Cells.map((cell) =>
             !cell.hidden && (
               <div
                 key={cell.id}
-                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none h-full w-full
-                  ${cell.span !== "empty" ? cell.span : "col-span-1 place-items-center "} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-blue-400" : ""}`}
+                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none min-h-[3rem] h-full w-full
+                  ${cell.span !== "empty" ? `${cell.span} h-full` : "col-span-1 place-items-center h-full"} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-blue-400" : ""}`}
                 onClick={() => ToggleIndividualSelection(cell.id)}
               >
                 Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}

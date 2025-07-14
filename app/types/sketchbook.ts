@@ -22,3 +22,22 @@ export interface Entry {
   tags?: string[];
   createdAt: string;
 }
+
+
+export type pages = {
+  id: Number,
+  idBook: Number,
+  masterId: Number,
+  active: Boolean,
+  widht: Number,
+  height: Number
+};
+
+export type books = {
+  id: Number,
+  user: String,
+  pages: Number,
+  name: String,
+  createdAt: String,
+  updatedAt: String,
+};
