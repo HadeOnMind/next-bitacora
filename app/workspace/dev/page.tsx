@@ -197,6 +197,7 @@ const MergeSelected = () => {
           return {
             ...cell,
             hidden: true,
+            span: 'col-span-0 row-span-0',
             merged: true,
             masterId: master.id,
             selected: false
@@ -355,6 +356,7 @@ const UnmergeSelected = () => {
                 onClick={() => ToggleIndividualSelection(cell.id)}
               >
                 Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
+                {Cells.length}
               </div>
             )
           )}

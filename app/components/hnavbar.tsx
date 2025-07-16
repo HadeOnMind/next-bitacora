@@ -23,10 +23,21 @@ export default function HorzNavbar() {
     <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="text-xl font-bold text-blue-600">My Bitacora</div>
+
+          <div className={twMerge("text-xl font-bold text-blue-600", 
+            pathname.startsWith("/workspace") && 
+            "text-amber-500 text-xl font-bold"
+          )}>My Bitacora</div>
+
           <div className="hidden md:flex space-x-6">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className={twMerge("text-gray-700 hover:text-blue-600 transition", pathname === item.href && "text-blue-700 italic tracking-wide drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] transition-all duration-300")}>
+              <Link key={item.href} 
+              href={item.href} 
+              className={twMerge("text-gray-700 hover:text-blue-600 transition", 
+              pathname === item.href && 
+              "text-blue-700 italic tracking-wide drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] transition-all duration-300",
+              pathname.startsWith("/workspace") && 
+              "text-amber-400 text-sm hover:text-purple-800"  )}>
                 {item.label}
               </Link>
             ))}
