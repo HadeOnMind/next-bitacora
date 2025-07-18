@@ -3,6 +3,7 @@ import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
 import { useState } from 'react';
 import { text } from 'stream/consumers';
+import { twMerge } from 'tailwind-merge';
 
 export default function DevPage() {
 
@@ -346,21 +347,25 @@ const UnmergeSelected = () => {
       <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
          
 
-       <div className='grid grid-cols-2 gap-2 max-w-4xl mx-auto grid-rows-3 h-[400px] border border-red-300'>
-          {Cells.map((cell) =>
-            !cell.hidden && (
-              <div
+<div className="grid grid-cols-2 grid-rows-3 gap-2 max-w-4xl mx-auto border border-red-300">
+    {Cells.map((cell) =>
+        !cell.hidden && (
+            <div
                 key={cell.id}
-                className={`bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none min-h-[3rem] h-full w-full
-                  ${cell.span !== "empty" ? `${cell.span} h-full` : "col-span-1 place-items-center h-full"} ${cell.hidden ? "hidden" : ""} ${cell.selected ? "border-4 border-emerald-500" : ""} ${cell.canMerge ? "border-2 border-blue-400" : ""}`}
+                className={twMerge(`
+                    bg-slate-200 p-4 rounded-xl shadow select-none min-h-[3rem] w-full
+                    ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
+                    ${cell.hidden ? "hidden" : ""}
+                    ${cell.selected ? "border-4 border-emerald-500" : ""}
+                `)}
                 onClick={() => ToggleIndividualSelection(cell.id)}
-              >
-                Cell {cell.id}, {cell.selected ? "✓" : " "} { cell.type}
-                {Cells.length}
-              </div>
-            )
-          )}
-        </div>
+            >
+                Cell {cell.id}
+            </div>
+        )
+    )}
+</div>
+
 
       </div>
 
