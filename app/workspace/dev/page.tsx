@@ -347,26 +347,29 @@ const UnmergeSelected = () => {
       <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
          
 
-<div className="grid grid-cols-2 grid-rows-3 gap-2 max-w-4xl mx-auto border border-red-300">
+<div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-2 max-w-4xl mx-auto">
+
     {Cells.map((cell) =>
         !cell.hidden && (
             <div
                 key={cell.id}
                 className={twMerge(`
-                    bg-slate-200 p-4 rounded-xl shadow select-none min-h-[3rem] w-full
+                    bg-slate-200 p-4 rounded-xl shadow select-none
                     ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
                     ${cell.hidden ? "hidden" : ""}
-                    ${cell.selected ? "border-4 border-emerald-500" : ""}
+                    ${cell.selected ? "border-3 border-emerald-500" : ""}
                 `)}
                 onClick={() => ToggleIndividualSelection(cell.id)}
             >
-                Cell {cell.id}
+                Cell {cell.id} , {cell.type}
             </div>
         )
     )}
 </div>
 
-
+<div className={`col-span-1 row-span-2 border border-red-500`}>
+    force tailwind rebuild
+</div>
       </div>
 
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
