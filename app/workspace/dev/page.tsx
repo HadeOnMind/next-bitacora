@@ -3,6 +3,7 @@ import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
 import { useState } from 'react';
 import { text } from 'stream/consumers';
+import { twMerge } from 'tailwind-merge';
 
 export default function DevPage() {
 
@@ -197,6 +198,7 @@ const MergeSelected = () => {
           return {
             ...cell,
             hidden: true,
+            span: 'col-span-0 row-span-0',
             merged: true,
             masterId: master.id,
             selected: false
@@ -333,33 +335,6 @@ const UnmergeSelected = () => {
 };
 
 
-const getGridPositionStyle = (cell) => {
-return {
-gridRow: `${cell.row + 1}`,
-gridColumn: `${cell.col + 1}`,
-};
-};
-
-
-
-
-const getCellClasses = (cell) => {
-  let classes = "bg-slate-200 p-4 rounded-xl shadow hover:bg-slate-300 select-none min-h-[3rem] h-full w-full ";
-  if (cell.span !== "empty") {
-  classes += `${cell.span} `;
-  }
-  if (cell.hidden) {
-  classes += "invisible ";
-  }
-  if (cell.selected) {
-  classes += "border-4 border-emerald-500 ";
-  }
-  if (cell.canMerge) {
-  classes += "border-2 border-blue-400 ";
-  }
-  return classes;
-  };
-
 
 
   return (
@@ -368,23 +343,37 @@ const getCellClasses = (cell) => {
 
       <div className='text-center'>opcion 1 - mapping</div>
 
-
       <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
          
 
-       <div className='grid grid-cols-2 gap-2 max-w-4xl mx-auto grid-rows-3 h-[400px] border border-red-300'>
-          {Cells.map((cell) => ( 
-            <div
-            key={cell.id}
-            className={getCellClasses(cell)}
-            style={getGridPositionStyle(cell)} 
-            onClick={() => ToggleIndividualSelection(cell.id)}
-            >
-            ...
-            </div>
-            ))}
-        </div>
+<div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-2 max-w-4xl mx-auto">
 
+    {Cells.map((cell) =>
+        !cell.hidden && (
+            <div
+                key={cell.id}
+                className={twMerge(`
+                    bg-slate-200 p-4 rounded-xl shadow select-none
+                    ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
+                    ${cell.hidden ? "hidden" : ""}
+                    ${cell.selected ? "border-3 border-emerald-500" : ""}
+                `)}
+                onClick={() => ToggleIndividualSelection(cell.id)}
+            >
+                Cell {cell.id} , {cell.type}
+
+                {cell.type == "text" ?  <textarea placeholder='Place some text here'></textarea> : ""}
+                {cell.type == "image" ?  <textarea placeholder='Place some text here'></textarea> : ""}
+                {cell.type == "canvas" ?  <canvas width={300} height={150} /> : ""}
+
+            </div>
+        )
+    )}
+</div>
+
+<div className={`hidden col-span-1 row-span-2 border border-red-500`}>
+    force tailwind rebuild
+</div>
       </div>
 
       <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
