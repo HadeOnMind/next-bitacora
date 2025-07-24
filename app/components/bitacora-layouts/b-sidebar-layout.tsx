@@ -2,13 +2,18 @@
 
 import { useState } from 'react';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { twMerge } from 'tailwind-merge';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
 
   return (
     <aside className={`bg-cyan-500 text-white transition-all duration-300 h-screen ${open ? 'w-56' : 'w-12'} p-2 my-16 z-50 shadow-lg`}>
-      <button onClick={() => setOpen(!open)} className={"mb-4 p-1 text-cyan-400 hover:bg-cyan-800 rounded-xl flex justify-center"}>
+      <button onClick={() => setOpen(!open)} className={twMerge(
+            "mb-3 p-1 text-cyan-400 hover:bg-cyan-800 rounded-xl flex justify-center",
+            open ? "w-full" : "w-8 pr-2"
+          )}
+        >
         {open ? <HiChevronLeft /> : <HiChevronRight />}
       </button>
 
