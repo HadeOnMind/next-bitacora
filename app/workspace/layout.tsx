@@ -8,18 +8,20 @@ export default function WorkspaceLayout({
   children: React.ReactNode;
 }) {
   return (
-     
-  <div>
 
-    <HorzNavbar />
+    <div className="flex flex-col h-screen">
+      <HorzNavbar />
 
-    
-   {/*  
-    <Sidebar /> */}
+      <div className="flex flex-1 overflow-hidden">
+        <aside>
+          <Sidebar />
+        </aside>
 
-    {children}
-  </div>
-
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
+          {children}
+        </main>
+      </div>
+    </div>
   );
 }
 
