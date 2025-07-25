@@ -4,6 +4,8 @@ import { useState } from "react";
 import { userAgent } from 'next/server';
 import { text } from 'stream/consumers';
 import { stringify } from 'querystring';
+import { get } from "http";
+import { twMerge } from "tailwind-merge";
 
 export default function Home() {
   const [added, setAdded] = useState(false);
@@ -20,9 +22,11 @@ type books = {
   updatedAt: String,
 };
 
-
 const createdBooks = 0;
+const [name, setName] = useState(""); 
+const [description, setDescription] = useState("");
 
+const [selectedBook, setSelectedBook] = useState<books | null>(null);
 
 
 const [Books, setSketchbooks] = useState<books[]>(
@@ -44,16 +48,10 @@ function SetAdded() {
     const newAddedState = !added;
     setAdded(newAddedState);
     console.log("added");
-
-     {/*if (newAddedState === true) {
-      setTimeout(() => {
-        setAdded(false);
-      }, 500);
-    } */}
   }
 
 
-
+/*
 const HandleBookcreation = () => {
 
   setSketchbooks(prev =>
@@ -65,18 +63,27 @@ const HandleBookcreation = () => {
 
 
 };
+*/
 
-const NewBook = () => {
-  const bookId = "";
-  const bookName = "";
+const HandleBookcreation = () => {
+  const newBook: books = {
+    id: Books.length,
+    user: "Jhojan",
+    pages: 0,
+    name,
+    description,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
 
+  setSketchbooks((prev) => [...prev, newBook]);
 
-  return 
-  <div>
-
-  </div>
-
+  setName("");
+  setDescription("");
+  setAdded(false);
 };
+
+
 
 
   const Addcard = (
@@ -108,33 +115,55 @@ const NewBook = () => {
                 {Addcard}
 
 
-                {added ? 
+                  {added ? 
+                  
+                  <div className="max-w-md p-4 bg-[#f9f6f1] border border-[#d6cfc3] rounded-lg shadow-sm space-y-3">
+                  <h3 className="text-xl font-semibold text-[#5a4633]">📘 Create a New Book</h3>
+                  <input
+                    type="text"
+                    placeholder="Book name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full p-2 border rounded text-[#3c2e1f]"
+                  />
+                  <textarea
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full p-2 border rounded text-[#3c2e1f] resize-none"
+                    rows={3}
+                  />
+                  <button
+                    onClick={HandleBookcreation}
+                    className="bg-[#7c5c3e] text-white px-4 py-2 rounded hover:bg-[#6b4f34]"
+                  >
+                    Create Book
+                  </button>
+                  </div>
+
+                  : ""
                 
-                <div className="max-w-md p-4 bg-[#f9f6f1] border border-[#d6cfc3] rounded-lg shadow-sm space-y-3">
-                <h3 className="text-xl font-semibold text-[#5a4633]">📘 Create a New Book</h3>
-                <input
-                  type="text"
-                  placeholder="Book name"
-                  className="w-full p-2 border rounded text-[#3c2e1f]"
-                />
-                <textarea
-                  placeholder="Description"
-
-                  className="w-full p-2 border rounded text-[#3c2e1f] resize-none"
-                  rows={3}
-                />
-                <button
-
-                  className="bg-[#7c5c3e] text-white px-4 py-2 rounded hover:bg-[#6b4f34]"
-                >
-                  Save Book
-                </button>
-                </div>
-
-                : ""
-              
-              }
+                  }
  
+
+
+                    {Books.map((book) => (
+                      <div
+                      key={String(book.id)}
+                      onClick={() => setSelectedBook(prev => prev?.id === book.id ? null : book)}
+                        className= {twMerge("min-w-[200px] p-4 bg-[#fffaf4] border border-[#d6cfc3] rounded-lg shadow hover:shadow-md transition space-y-2",
+                          selectedBook ? "border-4 border-amber-200" : ""
+                        )}
+                      >
+                        <h4 className="text-lg font-bold text-[#5a4633]">{book.name}</h4>
+                        <p className="text-sm text-[#3c2e1f]">{book.description}</p>
+                        <div className="text-xs text-[#a09481] italic">
+                          Created at: {book.createdAt}
+                        </div>
+                      </div>
+                    ))}
+
+
 
 
 
