@@ -6,27 +6,30 @@ import { text } from 'stream/consumers';
 import { stringify } from 'querystring';
 import { get } from "http";
 import { twMerge } from "tailwind-merge";
+import { useRouter } from 'next/navigation';
+
 
 export default function Home() {
   const [added, setAdded] = useState(false);
 
+const router = useRouter();
 
 
+  
 type books = {
-  id: Number,
-  user: String,
-  pages: Number,
-  name: String,
-  description: String,
-  createdAt: String,
-  updatedAt: String,
+  id: number,
+  user: string,
+  pages: number,
+  name: string,
+  description: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 const createdBooks = 0;
 const [name, setName] = useState(""); 
 const [description, setDescription] = useState("");
 
-const [selectedBook, setSelectedBook] = useState<books | null>(null);
 
 
 const [Books, setSketchbooks] = useState<books[]>(
@@ -150,9 +153,8 @@ const HandleBookcreation = () => {
                     {Books.map((book) => (
                       <div
                       key={String(book.id)}
-                      onClick={() => setSelectedBook(prev => prev?.id === book.id ? null : book)}
+                      onClick={() => router.push(`/workspace/bitacora/sketchbook/${book.id}`)}
                         className= {twMerge("min-w-[200px] p-4 bg-[#fffaf4] border border-[#d6cfc3] rounded-lg shadow hover:shadow-md transition space-y-2",
-                          selectedBook ? "border-4 border-amber-200" : ""
                         )}
                       >
                         <h4 className="text-lg font-bold text-[#5a4633]">{book.name}</h4>
@@ -162,10 +164,6 @@ const HandleBookcreation = () => {
                         </div>
                       </div>
                     ))}
-
-
-
-
 
               </div>
 
@@ -191,7 +189,7 @@ const HandleBookcreation = () => {
            
 
 
-          <div className="w-56 flex flex-col gap-4 overflow-y-auto bg-gray-300 px-2 py-4 rounded">
+          <div className="w-56 flex flex-col gap-4 overflow-y-auto bg-gray-300 px-2 py-4 rounded-md">
             <h2 className="text-lg font-semibold text-stone-700 mb-2">👥 Comunidad</h2>
             {[1, 2, 3].map(id => (
               <div

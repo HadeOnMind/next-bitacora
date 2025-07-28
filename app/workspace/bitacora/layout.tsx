@@ -8,10 +8,7 @@ export default function BookselectionLayout({
 }>) {
   return (
     <div>
-      <TopNav/>
-        <Sidebar/>
-        {children}
-        
+
     </div>
   );
 }

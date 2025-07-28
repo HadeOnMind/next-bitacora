@@ -15,6 +15,8 @@ export default function HorzNavbar() {
   ];
 
   const pathname = usePathname();
+  const inSketchbook = pathname?.includes('/sketchbook/');
+
 
 /*`text-gray-600 hover:text-blue-600 transition ${pathname === item.href && "text-blue-700"} ` */
 

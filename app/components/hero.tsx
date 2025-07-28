@@ -1,4 +1,4 @@
-import { BiLogIn } from "react-icons/bi";
+'use client';
 import { FaUsers } from "react-icons/fa";
 import { FaChildReaching } from "react-icons/fa6";
 import { AiFillSliders } from "react-icons/ai";
