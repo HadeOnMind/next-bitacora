@@ -4,6 +4,7 @@ import { stringify } from 'querystring';
 import { useState } from 'react';
 import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
+import {imageUpload} from '@/app/components/bitacora-main/HandleImageUploader'
 
 export default function DevPage() {
 
