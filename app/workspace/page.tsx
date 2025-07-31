@@ -153,7 +153,7 @@ const HandleBookcreation = () => {
                     {Books.map((book) => (
                       <div
                       key={String(book.id)}
-                      onClick={() => router.push(`/workspace/bitacora/sketchbook/${book.id}`)}
+                      onClick={() => router.push(`/sketchbook/${book.id}?title=${book.name}&desc=${book.description}`)}
                         className= {twMerge("min-w-[200px] p-4 bg-[#fffaf4] border border-[#d6cfc3] rounded-lg shadow hover:shadow-md transition space-y-2",
                         )}
                       >

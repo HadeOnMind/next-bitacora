@@ -19,7 +19,7 @@ const inSketchbook = pathname?.includes('/sketchbook/');
 
   return (
 
-    <div className={twMerge("flex flex-col h-screen", inSketchbook ? "hidden" : "")}>
+    <div className={twMerge("flex flex-col h-screen", inSketchbook ? "" : "")}>
       <HorzNavbar />
 
       <div className="flex flex-1 overflow-hidden">
