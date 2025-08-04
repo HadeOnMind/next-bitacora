@@ -15,9 +15,8 @@ const data = <div>
 
 
   return (
-    <div className="min-h-screen bg-stone-100 p-4 font-sans">
-      Hola
-
+    <div className="min-h-screen bg-stone-100 font-sans">
+      
     </div>
   );
 }

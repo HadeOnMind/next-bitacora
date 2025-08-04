@@ -1,13 +1,15 @@
 import Sidebar from "@/app/components/bitacora-layouts/b-sidebar-layout";
+import HorzNavbar from "@/app/components/hnavbar";
 
 export default function BookLayout({ children }: { children: React.ReactNode }) {
   return (
-<section className="bg-[#e7d0ba] min-h-screen p-2">
+<section className="bg-[#e7d0ba] min-h-screen flex flex-col">
+
+  <HorzNavbar />
+    
+
   <div className="flex h-full">
     <Sidebar/>
-    <main className="flex-1 bg-stone-100 p-4 font-sans">
-      {children}
-    </main>
   </div>
 </section>
 

@@ -32,9 +32,9 @@ export default function Sidebar() {
   return (
     <aside
       className={twMerge(
-        "bg-cyan-500 text-white transition-all duration-300 h-screen mt-16 p-2 shadow-lg flex flex-col justify-between",
+        "bg-cyan-500 text-white transition-all duration-300 h-screen  p-2 shadow-lg flex flex-col justify-between",
         open ? "w-56" : "w-12"
-      )}
+      )} style={{ height: "calc(100vh - 4rem)", marginTop: "4rem" }}
     >
 
 
@@ -101,11 +101,12 @@ export default function Sidebar() {
           <li className="flex-grow invisible" />
         </ul>
       </div>
+          <li className="flex-grow invisible" />
 
           {open && (
 
 
-            <div className="mt-22 px-3 py-2 bg-white/10 rounded-lg text-white">
+            <div className="px-3 py-2 bg-white/10 rounded-lg text-white">
               <div className="flex justify-between items-center text-sm font-medium mb-1">
                 <span>Used Space</span>
                 <span className="text-white/70">2.1 GB / 5 GB</span>
