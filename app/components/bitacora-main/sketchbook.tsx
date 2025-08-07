@@ -1,4 +1,5 @@
 "use client"
+
 import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
 
 
-export default function DevPage() {
+export default function sketchbook() {
 
 const [Merging, setMerging] = useState(false);
 
@@ -88,53 +89,6 @@ const ToggleIndividualSelection = (id: number) => {
   }
 
 };
-
-
-
-const HandleMerge = (id: number, colCount: number) => {
-  console.log("Attempting merge for ID:", id);
-
-  SetCells(prev => {
-    const updated = [...prev];
-    const current = updated.find(cell => cell.id === id);
-
-    if (!current) return updated;
-
-    const { row, col } = current;
-    const neighborCol = col + 1;
-    const neighbor = updated.find(c => c.row === row && c.col === neighborCol);
-
-    if (!neighbor) {
-      console.log("No valid neighbor to the right for merging");
-      return updated;
-    }
-
-      
-
-
-    return updated.map(cell => {
-      if (cell.id === current.id) {
-        return {
-          ...cell,
-          span: "col-span-2",
-          merged: true,
-          masterId: current.id
-        };
-      }
-      if (cell.id === neighbor.id) {
-        return {
-          ...cell,
-          hidden: true,
-          merged: true,
-          masterId: current.id
-        };
-      }
-      return cell;
-    });
-  });
-};
-
-//actual merge - testeando
 
 
 const MergeSelected = () => {
@@ -338,61 +292,102 @@ const UnmergeSelected = () => {
 
 
 
-  return (
-    <div className="p-10 text-black text-2xl pt-25">
-      <div>🧪 Hello from DEV page!</div>
+return (
+<div className="rounded-2xl bg-[#fdf6e3] shadow-2xl p-8 border-4 border-[#e0c097]">
 
-      <div className='text-center'>opcion 1 - mapping</div>
+  <div className="flex gap-10">
 
-      <div className='pt-3 bg-amber-200 rounded-xl my-8 pb-3'>
-         
-
-<div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-2 max-w-4xl mx-auto">
-
-    {Cells.map((cell) =>
+    {/* Left Page */}
+    <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
+      {Cells.map((cell) =>
         !cell.hidden && (
-            <div
-                key={cell.id}
-                className={twMerge(`
-                    bg-slate-200 p-4 rounded-xl shadow select-none
-                    ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
-                    ${cell.hidden ? "hidden" : ""}
-                    ${cell.selected ? "border-3 border-emerald-500" : ""}
-                `)}
-                onClick={() => ToggleIndividualSelection(cell.id)}
-            >
-                Cell {cell.id} , {cell.type}
-
-                {cell.type == "text" ?  <textarea placeholder='Place some text here'></textarea> : ""}
-                {cell.type == "image" ?  <textarea placeholder='Place some text here'></textarea> : ""}
-                {cell.type == "canvas" ?  <canvas width={300} height={150} /> : ""}
-
+          <div
+            key={cell.id}
+            className={twMerge(`
+              bg-[#f9f3e8] p-4 rounded-lg shadow-sm border border-[#cab38a] hover:bg-[#f6eddd] transition
+              ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
+              ${cell.hidden ? "hidden" : ""}
+              ${cell.selected ? "border-4 border-emerald-500" : ""}
+            `)}
+            onClick={() => ToggleIndividualSelection(cell.id)}
+          >
+            <div className="text-sm font-semibold text-[#5e503f] mb-2">
+              Cell {cell.id} , {cell.type}
             </div>
+
+            {cell.type == "text" && (
+              <textarea
+                placeholder="Place some text here"
+                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
+              />
+            )}
+            {cell.type == "image" && (
+              <textarea
+                placeholder="Place image URL or description"
+                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
+              />
+            )}
+            {cell.type == "canvas" && (
+              <canvas
+                width={300}
+                height={150}
+                className="border border-[#b49f89] bg-[#fef9ec] rounded shadow-inner"
+              />
+            )}
+          </div>
         )
-    )}
-</div>
-
-<div className={`hidden col-span-1 row-span-2 border border-red-500`}>
-    force tailwind rebuild
-</div>
-
-      </div>
-
-      <div className="flex bg-blue-400 rounded-xl mt-12 gap-8 items-center justify-center-safe  
-        fixed bottom-0 left-0 w-full z-50 shadow-md p-4">
-
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={MergeSelected} >Merge</button>
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={UnmergeSelected} >Unmerge</button>
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        onClick={() => setType("image")}>Type Image</button>
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        onClick={() => setType("text")}>Type Text</button>
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        onClick={() => setType("canvas")}>Type Canvas</button>
-        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={ToggleGlobalSelection}>Select All</button>
-        
-      </div>
-    
+      )}
     </div>
 
-  );}
+    {/* Right Page */}
+    <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
+      {Cells.map((cell) =>
+        !cell.hidden && (
+          <div
+            key={cell.id}
+            className={twMerge(`
+              bg-[#f9f3e8] p-4 rounded-lg shadow-sm border border-[#cab38a] hover:bg-[#f6eddd] transition
+              ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
+              ${cell.hidden ? "hidden" : ""}
+              ${cell.selected ? "border-4 border-emerald-500" : ""}
+            `)}
+            onClick={() => ToggleIndividualSelection(cell.id)}
+          >
+            <div className="text-sm font-semibold text-[#5e503f] mb-2">
+              Cell {cell.id} , {cell.type}
+            </div>
+
+            {cell.type == "text" && (
+              <textarea
+                placeholder="Place some text here"
+                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
+              />
+            )}
+            {cell.type == "image" && (
+              <textarea
+                placeholder="Place image URL or description"
+                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
+              />
+            )}
+            {cell.type == "canvas" && (
+              <canvas
+                width={300}
+                height={150}
+                className="border border-[#b49f89] bg-[#fef9ec] rounded shadow-inner"
+              />
+            )}
+          </div>
+        )
+      )}
+    </div>
+
+  </div>
+
+  {/* Hidden force-div */}
+  <div className="hidden col-span-1 row-span-2 border border-red-500">
+    force tailwind rebuild
+  </div>
+</div>
+
+
+);}

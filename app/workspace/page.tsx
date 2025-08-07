@@ -9,6 +9,7 @@ import { twMerge } from "tailwind-merge";
 import { useRouter } from 'next/navigation';
 
 
+
 export default function Home() {
   const [added, setAdded] = useState(false);
 
@@ -53,20 +54,6 @@ function SetAdded() {
     console.log("added");
   }
 
-
-/*
-const HandleBookcreation = () => {
-
-  setSketchbooks(prev =>
-    prev.map(books => ({
-      ...books,
-      user: "Jhojan"
-    }))
-  );
-
-
-};
-*/
 
 const HandleBookcreation = () => {
   const newBook: books = {
