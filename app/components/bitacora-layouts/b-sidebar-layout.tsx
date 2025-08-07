@@ -125,7 +125,7 @@ export default function Sidebar() {
       
         
 
-      <ul className="flex flex-col gap-3 mb-20">
+      <ul className="flex flex-col gap-3">
         <hr className="border-white/30 mb-0" />
 
         {bottomItems.map(({ label, icon, isProfile }) => (

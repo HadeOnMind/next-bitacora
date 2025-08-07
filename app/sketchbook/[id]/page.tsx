@@ -7,16 +7,43 @@ type PageProps = {
 
 export default async function SketchbookPage({ params, searchParams }: PageProps) {
 
-const data = <div>
-              <h1 className="text-xl font-semibold">Sketchbook ID: {params.id}</h1>
-              <h2 className="text-lg font-medium text-stone-700">{searchParams?.title}</h2>
-              <p className="text-stone-600">{searchParams?.desc}</p>
-            </div>
-
-
   return (
-    <div className="min-h-screen bg-stone-100 font-sans">
+    <div className="min-h-screen bg-stone-100 font-sans ">
+
+      <header>
+
+        <div className="flex h-1/5 w-full bg-amber-200 pt-16">
+        Header
+        </div>
+
+      </header>
       
+      <main>
+
+
+    <section>
+
+      <div>
+
+        This is the Sketchbook
+
+      </div>
+
+    </section>
+
+
+      </main>
+
+
+   
+      <footer>
+
+      <div className="flex h-1/5 w-full bg-amber-200">
+        Footer
+      </div>
+
+      </footer>
+
     </div>
   );
 }
