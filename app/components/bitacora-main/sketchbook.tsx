@@ -32,6 +32,7 @@ id: number,
 row: number,
 col: number,
 masterId: number,
+page: number;
 merged: boolean,
 selected: boolean,
 span: string,
@@ -42,22 +43,42 @@ canMerge: boolean,
 
 const rowCount = 3;
 const colCount = 2;
+const PageCount = 6;
 
 const [Cells, SetCells] = useState<cell[]>(
-  Array.from({ length: rowCount * colCount }, (_, i) => ({
-    div: i,
-    id: i,
-    row: Math.floor(i / colCount),
-    col: i % colCount,
-    masterId: i,
-    merged: false,
-    type: "empty",
-    span: "empty",
-    hidden: false,
-    canMerge: false,
-    selected: false,
-})));
+  Array.from({ length: rowCount * colCount * PageCount }, (_, i) => {
+    const cellsPerPage = rowCount * colCount;
+    const page = Math.floor(i / cellsPerPage);
+    const localIndex = i % cellsPerPage;
 
+    return {
+      div: i,
+      id: i,
+      page,
+      row: Math.floor(localIndex / colCount),
+      col: localIndex % colCount,
+      masterId: i,
+      merged: false,
+      type: "empty",
+      span: "empty",
+      hidden: false,
+      canMerge: false,
+      selected: false,
+    };
+  })
+);
+
+
+const [pages, setPages] = useState<number[]>([0, 1]);
+
+const addPage = () => {
+  const newPage = pages.length;
+  setPages([...pages, newPage]);
+};
+
+const [currentPage, setCurrentPage] = useState(0);
+
+const visibleCells = Cells.filter(cell => cell.page === currentPage && !cell.hidden);
 
 
 
@@ -293,13 +314,13 @@ const UnmergeSelected = () => {
 
 
 return (
-<div className="rounded-2xl bg-[#fdf6e3] shadow-2xl p-8 border-4 border-[#e0c097]">
+<div className="rounded-2xl bg-[#fdf6e3] shadow-xl p-4 border-4 border-[#e0c097]">
 
   <div className="flex gap-10">
 
     {/* Left Page */}
     <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
-      {Cells.map((cell) =>
+      {Cells.filter(cell => cell.page === 1 && !cell.hidden).map((cell) =>
         !cell.hidden && (
           <div
             key={cell.id}
@@ -341,7 +362,7 @@ return (
 
     {/* Right Page */}
     <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
-      {Cells.map((cell) =>
+      {Cells.filter(cell => cell.page === 0 && !cell.hidden).map((cell) =>
         !cell.hidden && (
           <div
             key={cell.id}
@@ -383,10 +404,31 @@ return (
 
   </div>
 
-  {/* Hidden force-div */}
+  <div className="flex justify-between mt-6">
+  <button
+    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+    disabled={currentPage === 0}
+    className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition"
+  >
+    ← Previous
+  </button>
+
+  <span className="text-[#5e503f] font-semibold">Page {currentPage + 1} of {pages.length}</span>
+
+  <button
+    onClick={() => setCurrentPage(p => Math.min(pages.length - 1, p + 1))}
+    disabled={currentPage >= pages.length - 1}
+    className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition"
+  >
+    Next →
+  </button>
+  </div>
+
+
   <div className="hidden col-span-1 row-span-2 border border-red-500">
     force tailwind rebuild
   </div>
+  
 </div>
 
 
