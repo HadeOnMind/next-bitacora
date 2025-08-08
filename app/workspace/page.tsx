@@ -91,7 +91,7 @@ const HandleBookcreation = () => {
     <div className="min-h-screen bg-stone-100 p-4 font-sans my-12">
       <div className="bg-stone-200 rounded-xl p-6 shadow-md max-w-8xl mx-auto">
         
-        <header className="text-3xl text-stone-700 font-bold mb-4">Bitácora</header>
+        <header className="text-3xl text-stone-700 font-bold mb-4">Bitacora</header>
 
         <div className="flex flex-row gap-6">
           
