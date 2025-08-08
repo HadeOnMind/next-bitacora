@@ -1,8 +1,8 @@
-"use client"
-
+'use client';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
-import { useState } from 'react';
+
 import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
 
@@ -76,9 +76,36 @@ const addPage = () => {
   setPages([...pages, newPage]);
 };
 
-const [currentPage, setCurrentPage] = useState(0);
+const [currentPages, setCurrentPages] = useState(0);
+const [currentLeftPage, setCurrentLeftPage] = useState(0);
+const [currentRightPage, setCurrentRightPage] = useState(1);
 
-const visibleCells = Cells.filter(cell => cell.page === currentPage && !cell.hidden);
+const visibleLeftCells = Cells.filter(cell => cell.page === currentLeftPage && !cell.hidden);
+const visibleRightCells = Cells.filter(cell => cell.page === currentRightPage && !cell.hidden);
+
+
+const ChangeNext = () => {
+
+    setCurrentLeftPage(currentLeftPage + 2);
+  
+    setCurrentRightPage(currentRightPage + 2);
+
+    console.log("changed pages to", currentLeftPage, currentRightPage)
+
+
+};
+
+const ChangePrev = () => {
+
+    setCurrentLeftPage(currentLeftPage - 2);
+  
+    setCurrentRightPage(currentRightPage - 2);
+
+    console.log("changed pages to", currentLeftPage, currentRightPage)
+
+
+};
+
 
 
 
@@ -318,9 +345,11 @@ return (
 
   <div className="flex gap-10">
 
+
+
     {/* Left Page */}
     <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
-      {Cells.filter(cell => cell.page === 1 && !cell.hidden).map((cell) =>
+      {Cells.filter(cell => cell.page === currentLeftPage && !cell.hidden).map((cell) =>
         !cell.hidden && (
           <div
             key={cell.id}
@@ -360,9 +389,12 @@ return (
       )}
     </div>
 
+
+
+
     {/* Right Page */}
     <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
-      {Cells.filter(cell => cell.page === 0 && !cell.hidden).map((cell) =>
+      {Cells.filter(cell => cell.page === currentRightPage && !cell.hidden).map((cell) =>
         !cell.hidden && (
           <div
             key={cell.id}
@@ -406,18 +438,18 @@ return (
 
   <div className="flex justify-between mt-6">
   <button
-    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
-    disabled={currentPage === 0}
+    onClick={ChangePrev}
+    disabled={currentLeftPage == 0}
     className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition"
   >
     ← Previous
   </button>
 
-  <span className="text-[#5e503f] font-semibold">Page {currentPage + 1} of {pages.length}</span>
+  <span className="text-[#5e503f] font-semibold">Pages {currentLeftPage} & {currentRightPage} of {PageCount}</span>
 
   <button
-    onClick={() => setCurrentPage(p => Math.min(pages.length - 1, p + 1))}
-    disabled={currentPage >= pages.length - 1}
+    onClick={ChangeNext}
+    disabled={currentRightPage >= PageCount}
     className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition"
   >
     Next →
