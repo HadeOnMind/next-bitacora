@@ -8,8 +8,12 @@ type PageProps = {
 
 };
 
+type SketchbookPage = {
+onMerge: () => void;
+};
 
-export default async function SketchbookPage({ params, searchParams }: PageProps) {
+
+export default function SketchbookPage({onMerge}: SketchbookPage) {
 
 
 
@@ -56,6 +60,10 @@ export default async function SketchbookPage({ params, searchParams }: PageProps
           </div>
           
           <ChangeDeploy></ChangeDeploy>
+
+          <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
+            <button className="text-[#3e3e3e] font-medium" onClick={onMerge}>Merge</button>
+          </div>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
             <button className="text-[#3e3e3e] font-medium">Add</button>

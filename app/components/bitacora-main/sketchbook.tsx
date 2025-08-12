@@ -2,7 +2,7 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
-
+import SketchbookPage from '@/app/sketchbook/[id]/page'
 import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
 
@@ -433,6 +433,10 @@ return (
         )
       )}
     </div>
+
+    <button className='bg bg-red-700' onClick={() => setType("text")}>CLICK TEXT</button>
+    <button className='bg bg-red-700' onClick={() => MergeSelected()}>CLICK MERGE</button>
+
 
   </div>
 
