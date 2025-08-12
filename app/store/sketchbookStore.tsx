@@ -1,17 +1,23 @@
 import { create } from 'zustand'
 
-type SketchbookStore = {
-  // States
-  counter: number
+type CellActionsStore = {
+  setType: (type: "text" | "image" | "canvas" | "empty") => void;
+  setSetType: (fn: CellActionsStore['setType']) => void;
 
-  // Actions
-  increment: () => void
-  decrement: () => void
-}
+  mergeSelected: () => void;
+  setMergeSelected: (fn: () => void) => void;
 
-export const useSketchbookStore = create<SketchbookStore>((set) => ({
-  counter: 0,
+  unmergeSelected: () => void;
+  setUnmergeSelected: (fn: () => void) => void;
+};
 
-  increment: () => set((state) => ({ counter: state.counter + 1 })),
-  decrement: () => set((state) => ({ counter: state.counter - 1 })),
-}))
+export const useCellActions = create<CellActionsStore>((set, get) => ({
+  setType: () => {},
+  setSetType: (fn) => set({ setType: fn }),
+
+  mergeSelected: () => {},
+  setMergeSelected: (fn) => set({ mergeSelected: fn }),
+
+  unmergeSelected: () => {},
+  setUnmergeSelected: (fn) => set({ unmergeSelected: fn }),
+}));

@@ -5,9 +5,19 @@ import { stringify } from 'querystring';
 import SketchbookPage from '@/app/sketchbook/[id]/page'
 import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
+import { useCellActions } from '@/app/store/sketchbookStore';
+import { useEffect } from 'react';
 
 
 export default function sketchbook() {
+  
+
+useEffect(() => {
+  useCellActions.getState().setSetType(setType);
+  useCellActions.getState().setMergeSelected(MergeSelected);
+  useCellActions.getState().setUnmergeSelected(UnmergeSelected);
+}, []);
+
 
 const [Merging, setMerging] = useState(false);
 
@@ -433,9 +443,11 @@ return (
         )
       )}
     </div>
+      
 
-    <button className='bg bg-red-700' onClick={() => setType("text")}>CLICK TEXT</button>
-    <button className='bg bg-red-700' onClick={() => MergeSelected()}>CLICK MERGE</button>
+      {/*<button className='bg bg-red-700' onClick={() => setType("text")}>CLICK TEXT</button>
+    <button className='bg bg-red-700' onClick={() => MergeSelected()}>CLICK MERGE</button>*/}
+    
 
 
   </div>

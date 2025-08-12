@@ -1,6 +1,10 @@
+"use client";
 import ChangeDeploy from "@/app/components/bitacora-layouts/buttons/ChangeDeployPage";
 import ListDeploy from "@/app/components/bitacora-layouts/buttons/ListDeployPage";
 import Mainbook from "@/app/components/bitacora-main/sketchbook";
+import { useCellActions } from "@/app/store/sketchbookStore";
+
+
 
 type PageProps = {
   params: { id: string };
@@ -13,9 +17,15 @@ onMerge: () => void;
 };
 
 
+
+
+
+
 export default function SketchbookPage({onMerge}: SketchbookPage) {
 
-
+  
+  const mergeSelected = useCellActions((state) => state.mergeSelected);
+  const unmergeSelected = useCellActions((state) => state.unmergeSelected);
 
   return (
     <div className="min-h-screen bg-stone-100 font-sans p-4 pt-24">
@@ -62,7 +72,7 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
           <ChangeDeploy></ChangeDeploy>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
-            <button className="text-[#3e3e3e] font-medium" onClick={onMerge}>Merge</button>
+            <button className="text-[#3e3e3e] font-medium" onClick={mergeSelected}>Merge</button>
           </div>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
