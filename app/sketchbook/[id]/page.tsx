@@ -1,8 +1,9 @@
 "use client";
+import { useRef } from "react";
 import ChangeDeploy from "@/app/components/bitacora-layouts/buttons/ChangeDeployPage";
 import ListDeploy from "@/app/components/bitacora-layouts/buttons/ListDeployPage";
 import Mainbook from "@/app/components/bitacora-main/sketchbook";
-import { useCellActions } from "@/app/store/sketchbookStore";
+
 
 
 
@@ -23,9 +24,8 @@ onMerge: () => void;
 
 export default function SketchbookPage({onMerge}: SketchbookPage) {
 
-  
-  const mergeSelected = useCellActions((state) => state.mergeSelected);
-  const unmergeSelected = useCellActions((state) => state.unmergeSelected);
+   const mainBookRef = useRef<any>(null);
+
 
   return (
     <div className="min-h-screen bg-stone-100 font-sans p-4 pt-24">
@@ -41,8 +41,8 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
         <div className="flex-grow bg-white border border-dashed border-gray-300 my-4 flex items-center justify-center">
 
             <Mainbook
-
-            ></Mainbook>
+            ref={mainBookRef}
+            />
 
         </div>
 
@@ -54,7 +54,7 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
 
 
           <div className="bg-[#e5c9a4] rounded-xl shadow px-4 py-2 hover:bg-[#dcb991] transition">
-            <button className="text-[#3e3e3e] font-medium">Update</button>
+            <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.UnmergeSelected()}>Unmerge</button>
           </div>
 
           <div className="bg-[#d6c7b0] rounded-xl shadow px-4 py-2 hover:bg-[#cbb89d] transition">
@@ -72,7 +72,7 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
           <ChangeDeploy></ChangeDeploy>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
-            <button className="text-[#3e3e3e] font-medium" onClick={mergeSelected}>Merge</button>
+            <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.MergeSelected()}>Merge</button>
           </div>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">

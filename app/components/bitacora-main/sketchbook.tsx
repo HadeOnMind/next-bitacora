@@ -2,34 +2,14 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { userAgent } from 'next/server';
 import { stringify } from 'querystring';
-import SketchbookPage from '@/app/sketchbook/[id]/page'
 import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
 import { useCellActions } from '@/app/store/sketchbookStore';
 import { useEffect } from 'react';
 
 
-export default function sketchbook() {
+const sketchbook = forwardRef((props, ref) => {
   
-
-useEffect(() => {
-  useCellActions.getState().setSetType(setType);
-  useCellActions.getState().setMergeSelected(MergeSelected);
-  useCellActions.getState().setUnmergeSelected(UnmergeSelected);
-}, []);
-
-
-const [Merging, setMerging] = useState(false);
-
-const MergingSet = () => {
-  setMerging(!Merging)
-
-  if(Merging){
-    console.log("Merging activated")
-  } else {
-    console.log("Merging Deactivated")
-  }
-};
 
 const type = ["none",
   "text",
@@ -308,45 +288,35 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
 };
 
 
-const UnmergeSelected = () => {
+
+
+const UnmergeSelected = () => { 
   const selectedCells = Cells.filter(cell => cell.selected);
-  const mergedSelectedCells = Cells.some(cell => cell.merged && cell.selected)
-  const masterIds = new Set(
-      selectedCells.filter(cell => cell.merged).map(cell => cell.masterId)
-    );
+  const mergedSelectedCells = Cells.some(cell => cell.merged && cell.selected);
+  const masterIds = new Set( selectedCells.filter(cell => cell.merged).map(cell => cell.masterId) );
 
-
-  if (!mergedSelectedCells) {
-    alert("One of the selected cells is already unmerged");
-  } else if (selectedCells.length === 0) {
-    alert("Select at least one merged cell to unmerge.");
+  if (!mergedSelectedCells) { alert("One of the selected cells is already unmerged"); } 
+  else if 
+  (selectedCells.length === 0)
+  { alert("Select at least one merged cell to unmerge.");
+  return; } else if (masterIds.size === 0) { alert("No merged cells selected.");
     return;
-  } else if (masterIds.size === 0) {
-    alert("No merged cells selected.");
-    return;
-  } 
-
-  
-
-  SetCells(prev =>
-    prev.map(cell => {
-      if (masterIds.has(cell.masterId)) {
-        return {
-          ...cell,
-          span: "empty",
-          merged: false,
-          hidden: false,
-          masterId: cell.id,
-          selected: false
-        };
-      }
-      return cell;
-    })
-  );
-
+      } SetCells(prev => prev.map(cell => { if (masterIds.has(cell.masterId)) { return { ...cell, span: "empty", merged: false, hidden: false, masterId: cell.id, selected: false };
+    } return cell; }) );
   console.log("Unmerged cells with masterIds:", [...masterIds].join(", "));
 };
 
+
+
+  useImperativeHandle(ref, () => ({
+    MergeSelected,
+    UnmergeSelected
+  }));
+
+
+  useEffect(() => {
+  useCellActions.getState().setSetType(setType);
+}, []);
 
 
 
@@ -480,4 +450,8 @@ return (
 </div>
 
 
-);}
+    )
+  }
+);
+
+export default sketchbook;
