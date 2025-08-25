@@ -6,10 +6,11 @@ import { text } from 'stream/consumers';
 import { twMerge } from 'tailwind-merge';
 import { useCellActions } from '@/app/store/sketchbookStore';
 import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 
 const sketchbook = forwardRef((props, ref) => {
-  
+const setSetType = useCellActions((s) => s.setSetType)
 
 const type = ["none",
   "text",
@@ -263,7 +264,10 @@ const areCellsContiguousXY = (selected: cell[]) => {
 
 
 const [currenType, SetCurrenType] = useState<"text" | "image" | "canvas" | "empty">("empty");
+const SelectedCells = Cells.filter(cell => cell.selected);
 
+
+{/*
 const setType = (type: "text" | "image" | "canvas" | "empty") => {
   const SelectedCells = Cells.some(cell => cell.selected);
 
@@ -286,6 +290,33 @@ const setType = (type: "text" | "image" | "canvas" | "empty") => {
 
   SetCurrenType(type);
 };
+*/}
+
+
+
+
+const setType = useCallback((type: "text" | "image" | "canvas" | "empty") => {
+  const SelectedCells = Cells.filter(cell => cell.selected);
+
+  if (!SelectedCells) {
+    console.log("No selected cells to apply type.");
+    return;
+  }
+  SetCells(prev =>
+    prev.map(cell => {
+      if (cell.selected && cell.type !== type) {
+        console.log(`Cell ${cell.id} type changed from ${cell.type} to ${type}`);
+        return { ...cell, type };
+      }
+      return cell;
+    })
+  );
+
+  SetCurrenType(type);
+}, []);
+
+
+
 
 
 
@@ -310,13 +341,14 @@ const UnmergeSelected = () => {
 
   useImperativeHandle(ref, () => ({
     MergeSelected,
-    UnmergeSelected
+    UnmergeSelected,
+    setType
   }));
 
 
   useEffect(() => {
-  useCellActions.getState().setSetType(setType);
-}, []);
+    setSetType(setType)
+  }, [setSetType])
 
 
 

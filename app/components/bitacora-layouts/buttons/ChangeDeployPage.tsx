@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 export default function ChangeDeploy() {
   const [open, setOpen] = useState(false);
   const setType = useCellActions((state) => state.setType);
+  const setSetType = useCellActions((s) => s.setSetType)
+
   return (
     <div className="relative flex flex-col items-center">
 

@@ -3,6 +3,7 @@ import { useRef } from "react";
 import ChangeDeploy from "@/app/components/bitacora-layouts/buttons/ChangeDeployPage";
 import ListDeploy from "@/app/components/bitacora-layouts/buttons/ListDeployPage";
 import Mainbook from "@/app/components/bitacora-main/sketchbook";
+import { useCellActions } from "@/app/store/sketchbookStore";
 
 
 
@@ -24,8 +25,8 @@ onMerge: () => void;
 
 export default function SketchbookPage({onMerge}: SketchbookPage) {
 
-   const mainBookRef = useRef<any>(null);
-
+  const mainBookRef = useRef<any>(null);
+  const setSetType = useCellActions((s) => s.setSetType)
 
   return (
     <div className="min-h-screen bg-stone-100 font-sans p-4 pt-24">
