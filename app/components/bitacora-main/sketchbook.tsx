@@ -7,16 +7,24 @@ import { twMerge } from 'tailwind-merge';
 import { useCellActions } from '@/app/store/sketchbookStore';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
+import { Lora, Patrick_Hand } from "next/font/google";
+import styles from "@/app/ui/sketchbook.module.css";
+
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-lora",
+});
+
+const patrick = Patrick_Hand({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-patrick",
+});
 
 
 const sketchbook = forwardRef((props, ref) => {
 const setSetType = useCellActions((s) => s.setSetType)
-
-const type = ["none",
-  "text",
-  "img",
-  "canvas",
-];
 
 type cell = {
 id: number,
@@ -34,7 +42,8 @@ canMerge: boolean,
 
 const rowCount = 3;
 const colCount = 2;
-const PageCount = 6;
+const PageCount = 7;
+const PagecountIdrest = PageCount - 1;
 
 const [Cells, SetCells] = useState<cell[]>(
   Array.from({ length: rowCount * colCount * PageCount }, (_, i) => {
@@ -353,135 +362,140 @@ const UnmergeSelected = () => {
 
 
 return (
-<div className="rounded-2xl bg-[#fdf6e3] shadow-xl p-4 border-4 border-[#e0c097]">
+<div className={`${styles.rim} rounded-2xl bg-[#f6efe0] shadow-xl p-4 relative`}>
 
-  <div className="flex gap-10">
+      <div className={styles.stain} />
 
+      <div className="flex gap-8 items-start justify-center">
+        {/* Left Page */}
+        <div className={`${styles.pageInner} ${styles.paperTexture} rounded-xl border-2 border-[#d6b48a] p-6 max-w-[520px] w-full`}>
+          <div className="relative">
+            <div className="absolute -left-4 top-6 w-6 h-12 rounded-sm bg-[#dcb67a] opacity-10 transform rotate-3" />
+            <div className="absolute left-3 top-6 w-1 h-8 rounded bg-[rgba(0,0,0,0.03)]" />
+            <div className={`${styles.cornerCurl}`} />
+          </div>
 
+          <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4">
+            {Cells.filter(cell => cell.page === currentLeftPage && !cell.hidden).map((cell) =>
+              !cell.hidden && (
+                <div
+                  key={cell.id}
+                  className={twMerge(
+                    "relative bg-[#fff7ea] p-4 rounded-lg shadow-sm border border-[#e1ccb0] hover:translate-y-[-2px] transition-transform duration-180",
+                    cell.span !== "empty" ? cell.span : "col-span-1",
+                    cell.selected ? "ring-4 ring-[#b7e3b6] ring-offset-2 ring-offset-[#fff6ea] shadow-[inset_0_6px_12px_rgba(0,0,0,0.05)]" : ""
+                  )}
+                  onClick={() => ToggleIndividualSelection(cell.id)}
+                >
+                  <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
+                    <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
+                    <span className="text-[#7d5b3a]">{cell.type}</span>
+                  </div>
 
-    {/* Left Page */}
-    <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
-      {Cells.filter(cell => cell.page === currentLeftPage && !cell.hidden).map((cell) =>
-        !cell.hidden && (
-          <div
-            key={cell.id}
-            className={twMerge(`
-              bg-[#f9f3e8] p-4 rounded-lg shadow-sm border border-[#cab38a] hover:bg-[#f6eddd] transition
-              ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
-              ${cell.hidden ? "hidden" : ""}
-              ${cell.selected ? "border-4 border-emerald-500" : ""}
-            `)}
-            onClick={() => ToggleIndividualSelection(cell.id)}
-          >
-            <div className="text-sm font-semibold text-[#5e503f] mb-2">
-              Cell {cell.id} , {cell.type}
-            </div>
+                  {cell.type === "text" && (
+                    <textarea
+                      placeholder="Write your note..."
+                      className="flex-grow w-full p-3 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner"
+                      style={{ fontFamily: "'Patrick Hand', cursive", fontSize: 15, minHeight: "64px" }}
+                    />
+                  )}
 
-            {cell.type == "text" && (
-              <textarea
-                placeholder="Place some text here"
-                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
-              />
-            )}
-            {cell.type == "image" && (
-              <textarea
-                placeholder="Place image URL or description"
-                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
-              />
-            )}
-            {cell.type == "canvas" && (
-              <canvas
-                width={300}
-                height={150}
-                className="border border-[#b49f89] bg-[#fef9ec] rounded shadow-inner"
-              />
+                  {cell.type === "image" && (
+                    <textarea
+                      placeholder="Image URL or description"
+                      className="w-full h-full p-2 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner text-sm"
+                    />
+                  )}
+
+                  {cell.type === "canvas" && (
+                    <canvas width={300} height={150} className="border border-[#b49f89] bg-[#fdf7ea] rounded shadow-inner" />
+                  )}
+                </div>
+              )
             )}
           </div>
-        )
-      )}
-    </div>
+        </div>
 
 
+        {/* Gutter stitching */}
+
+        <div className={styles.binding} />
 
 
-    {/* Right Page */}
-    <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4 max-w-4xl w-full bg-[#fefaf1] p-6 rounded-xl border-2 border-[#d8b17b] shadow-inner">
-      {Cells.filter(cell => cell.page === currentRightPage && !cell.hidden).map((cell) =>
-        !cell.hidden && (
-          <div
-            key={cell.id}
-            className={twMerge(`
-              bg-[#f9f3e8] p-4 rounded-lg shadow-sm border border-[#cab38a] hover:bg-[#f6eddd] transition
-              ${cell.span !== "empty" ? `${cell.span}` : "col-span-1"}
-              ${cell.hidden ? "hidden" : ""}
-              ${cell.selected ? "border-4 border-emerald-500" : ""}
-            `)}
-            onClick={() => ToggleIndividualSelection(cell.id)}
-          >
-            <div className="text-sm font-semibold text-[#5e503f] mb-2">
-              Cell {cell.id} , {cell.type}
-            </div>
+        {/* Right Page */}
 
-            {cell.type == "text" && (
-              <textarea
-                placeholder="Place some text here"
-                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
-              />
-            )}
-            {cell.type == "image" && (
-              <textarea
-                placeholder="Place image URL or description"
-                className="w-full h-full p-2 rounded bg-[#fffaf3] border border-[#e1d5c5] resize-none text-[#3b3b3b] shadow-inner"
-              />
-            )}
-            {cell.type == "canvas" && (
-              <canvas
-                width={300}
-                height={150}
-                className="border border-[#b49f89] bg-[#fef9ec] rounded shadow-inner"
-              />
+        <div className={`${styles.pageInner} ${styles.paperTexture} rounded-xl border-2 border-[#d6b48a] p-6 max-w-[520px] w-full`}>
+          <div className="relative">
+            <div className={`${styles.cornerCurl} right-12 top-12`} />
+          </div>
+
+          <div className="grid grid-cols-2 grid-rows-[100px_100px_100px] gap-4">
+            {Cells.filter(cell => cell.page === currentRightPage && !cell.hidden).map((cell) =>
+              !cell.hidden && (
+                <div
+                  key={cell.id}
+                  className={twMerge(
+                    "relative bg-[#fff7ea] p-4 rounded-lg shadow-sm border border-[#e1ccb0] hover:translate-y-[-2px] transition-transform duration-180",
+                    cell.span !== "empty" ? cell.span : "col-span-1",
+
+                    cell.selected ? "ring-4 ring-[#b7e3b6] ring-offset-2 ring-offset-[#fff6ea] shadow-[inset_0_6px_12px_rgba(0,0,0,0.05)]" : ""
+                  )}
+                  onClick={() => ToggleIndividualSelection(cell.id)}
+                >
+                  <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
+                    <span className="font-semibold">{`Page ${currentRightPage}`}</span> — {`Cell ${cell.id}`} / <span className="text-[#7d5b3a]">{cell.type}</span>
+                  </div>
+
+                  {cell.type === "text" && (
+                    <textarea
+                      placeholder="Write your note..."
+                      className="w-full h-full p-2 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner"
+                      style={{ minHeight: 64, fontFamily: "'Patrick Hand', cursive", fontSize: 15 }}
+                    />
+                  )}
+
+                  {cell.type === "image" && (
+                    <textarea
+                      placeholder="Image URL or description"
+                      className="w-full h-full p-2 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner text-sm"
+                    />
+                  )}
+
+                  {cell.type === "canvas" && (
+                    <canvas width={300} height={150} className="border border-[#b49f89] bg-[#fdf7ea] rounded shadow-inner" />
+                  )}
+                </div>
+              )
             )}
           </div>
-        )
-      )}
+        </div>
+      </div>
+
+      {/* Controls + handwritten footer */}
+
+      <div className="flex justify-between mt-6 items-center px-6">
+        <button 
+        onClick={ChangePrev} 
+        disabled={currentLeftPage === 0} 
+        className="disabled:opacity-50 bg-[#cfe7c8] rounded-xl shadow px-4 py-2 hover:bg-[#bfe0b5] transition">
+          ← Previous
+        </button>
+
+        <div className={`${styles.handFooter} inline-block border-b border-dotted border-[#d1b38a] px-6 py-2`}>
+
+          <span >Pages {currentLeftPage + 1} &amp; {currentRightPage + 1} of {PageCount}</span>
+
+        </div>
+
+        <button 
+        onClick={ChangeNext} 
+        disabled={currentRightPage >= PagecountIdrest} 
+        className="disabled:opacity-50 bg-[#cfe7c8] rounded-xl shadow px-4 py-2 hover:bg-[#bfe0b5] transition">
+          Next →
+        </button>
+      </div>
+
     </div>
-      
-
-      {/*<button className='bg bg-red-700' onClick={() => setType("text")}>CLICK TEXT</button>
-    <button className='bg bg-red-700' onClick={() => MergeSelected()}>CLICK MERGE</button>*/}
-    
-
-
-  </div>
-
-  <div className="flex justify-between mt-6">
-  <button
-    onClick={ChangePrev}
-    disabled={currentLeftPage == 0}
-    className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition"
-  >
-    ← Previous
-  </button>
-
-  <span className="text-[#5e503f] font-semibold">Pages {currentLeftPage} & {currentRightPage} of {PageCount}</span>
-
-  <button
-    onClick={ChangeNext}
-    disabled={currentRightPage >= PageCount}
-    className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition"
-  >
-    Next →
-  </button>
-  </div>
-
-
-  <div className="hidden col-span-1 row-span-2 border border-red-500">
-    force tailwind rebuild
-  </div>
-  
-</div>
-
-
     )
   }
 );

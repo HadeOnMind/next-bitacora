@@ -50,12 +50,8 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
 
         <div className="bg-[#f3e8d5] p-3 rounded-xl flex gap-4 border-2 border-[#d8b17b] shadow-md items-center">
 
-            <ListDeploy
-            ></ListDeploy>
-
-
-          <div className="bg-[#e5c9a4] rounded-xl shadow px-4 py-2 hover:bg-[#dcb991] transition">
-            <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.UnmergeSelected()}>Unmerge</button>
+         <div className="bg-[#d3d1cb] rounded-xl shadow px-4 py-2 hover:bg-[#c7c5be] transition">
+            <button className="text-[#3e3e3e] font-medium">Comments</button>
           </div>
 
           <div className="bg-[#d6c7b0] rounded-xl shadow px-4 py-2 hover:bg-[#cbb89d] transition">
@@ -66,14 +62,16 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
             Panel
           </div>
 
-          <div className="bg-[#d3d1cb] rounded-xl shadow px-4 py-2 hover:bg-[#c7c5be] transition">
-            <button className="text-[#3e3e3e] font-medium">Comments</button>
-          </div>
+          
           
           <ChangeDeploy></ChangeDeploy>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
             <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.MergeSelected()}>Merge</button>
+          </div>
+
+           <div className="bg-[#e5c9a4] rounded-xl shadow px-4 py-2 hover:bg-[#dcb991] transition">
+            <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.UnmergeSelected()}>Unmerge</button>
           </div>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">

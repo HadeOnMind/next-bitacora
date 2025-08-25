@@ -3,3 +3,24 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.paper-texture {
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.4) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><rect fill='%23f9f3e8' width='60' height='60'/><g fill='%23d6c8b2' opacity='0.07'><circle cx='3' cy='7' r='1.2'/><circle cx='24' cy='11' r='0.9'/><circle cx='46' cy='38' r='0.85'/><circle cx='12' cy='44' r='0.7'/><circle cx='38' cy='18' r='0.6'/></g></svg>");
+  background-repeat: repeat;
+}
+
+
+.page-edge-mask {
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 85%, rgba(0,0,0,0.8) 92%, rgba(0,0,0,0.6) 100%);
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 85%, rgba(0,0,0,0.8) 92%, rgba(0,0,0,0.6) 100%);
+}
+
+
+.gutter-decor {
+  background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0));
+  width: 28px;
+  border-radius: 6px;
+  box-shadow: inset -8px 0 20px rgba(0,0,0,0.04);
+}

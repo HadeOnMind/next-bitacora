@@ -1,0 +1,101 @@
+.paperTexture {
+  /* subtle speckle + paper base */
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.25)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' fill='%23f8f0e0'/><g fill='%23d6c0a0' opacity='0.06'><circle cx='6' cy='8' r='0.9'/><circle cx='22' cy='16' r='0.7'/><circle cx='30' cy='30' r='0.8'/></g></svg>");
+  background-repeat: repeat;
+}
+
+/* outer rim / burn vignette */
+.rim {
+  position: relative;
+}
+.rim::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(30,20,10,0.12);
+  border: 2px solid rgba(172,120,56,0.13);
+}
+
+/* inner page vignette for a used paper feel */
+.pageInner {
+  position: relative;
+  overflow: visible;
+}
+.pageInner::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.035);
+}
+
+/* small corner fold */
+.cornerCurl {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(0,0,0,0.03));
+  transform: rotate(12deg);
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  opacity: 0.7;
+}
+
+/* vertical stitched gutter between left and right pages */
+.gutterStitch {
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, rgba(0,0,0,0.02), rgba(0,0,0,0));
+  border-radius: 12px;
+}
+.gutterStitch::before {
+  content: "";
+  width: 3px;
+  height: 70%;
+  background-image: repeating-linear-gradient(180deg, rgba(180,130,80,0.18) 0 4px, transparent 4px 8px);
+  border-radius: 2px;
+  box-shadow: inset -2px 0 6px rgba(0,0,0,0.03);
+}
+
+/* faint coffee stain overlay (toggleable) */
+.stain {
+  position: absolute;
+  inset: 12%;
+  background-image: radial-gradient(ellipse at 40% 30%, rgba(120,70,30,0.06) 0 20%, rgba(120,70,30,0.02) 30%, transparent 60%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+/* handwritten footer text style */
+.handFooter {
+  font-family: "Patrick Hand", cursive;
+  color: #6b4f33;
+  font-size: 2rem;
+  letter-spacing: 0.6px;
+  transform: rotate(-1deg);
+  opacity: 0.95;
+}
+
+/* small printed serif title */
+.serifTitle {
+  font-family: "Cormorant Garamond", serif;
+}
+
+/* small rule lines option inside pages */
+.ruledLines {
+  background-image: repeating-linear-gradient(transparent, transparent 29px, rgba(200,170,130,0.04) 30px);
+}
+
+ .binding { width: 28px; display: flex; align-items: center; justify-content: center; position: relative; } 
+ .binding::before{ content: ""; width: 4px; height: 78%; background-image: repeating-linear-gradient(180deg, rgba(90,50,20,0.15) 0 6px, rgba(0,0,0,0) 6px 12px); border-radius: 2px; box-shadow: inset -3px 0 12px rgba(0,0,0,0.035); }
