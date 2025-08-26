@@ -50,8 +50,8 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
 
         <div className="bg-[#f3e8d5] p-3 rounded-xl flex gap-4 border-2 border-[#d8b17b] shadow-md items-center">
 
-         <div className="bg-[#d3d1cb] rounded-xl shadow px-4 py-2 hover:bg-[#c7c5be] transition">
-            <button className="text-[#3e3e3e] font-medium">Comments</button>
+          <div className="bg-[#d3d1cb] rounded-xl shadow px-4 py-2 hover:bg-[#c7c5be] transition">
+            <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.setdevmode()}>Dev Mode</button>
           </div>
 
           <div className="bg-[#d6c7b0] rounded-xl shadow px-4 py-2 hover:bg-[#cbb89d] transition">

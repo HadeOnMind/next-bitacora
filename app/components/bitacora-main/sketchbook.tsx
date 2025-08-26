@@ -347,17 +347,28 @@ const UnmergeSelected = () => {
 };
 
 
+const [DevMode, SetDevMode] = useState(true);
+
+const setdevmode = () => {
+ SetDevMode(!DevMode);
+console.log("devmode set to: ", !DevMode)
+};
+
+
 
   useImperativeHandle(ref, () => ({
     MergeSelected,
     UnmergeSelected,
-    setType
+    setType,
+    setdevmode
   }));
 
 
   useEffect(() => {
     setSetType(setType)
   }, [setSetType])
+
+ 
 
 
 
@@ -387,10 +398,16 @@ return (
                   )}
                   onClick={() => ToggleIndividualSelection(cell.id)}
                 >
-                  <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
-                    <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
-                    <span className="text-[#7d5b3a]">{cell.type}</span>
-                  </div>
+
+                  { 
+                    DevMode === true && (
+                      <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
+                        <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
+                        <span className="text-[#7d5b3a]">{cell.type}</span>
+                      </div>
+                    )
+                  }
+                  
 
                   {cell.type === "text" && (
                     <textarea
@@ -417,12 +434,11 @@ return (
         </div>
 
 
-        {/* Gutter stitching */}
 
         <div className={styles.binding} />
 
 
-        {/* Right Page */}
+
 
         <div className={`${styles.pageInner} ${styles.paperTexture} rounded-xl border-2 border-[#d6b48a] p-6 max-w-[520px] w-full`}>
           <div className="relative">
@@ -442,9 +458,15 @@ return (
                   )}
                   onClick={() => ToggleIndividualSelection(cell.id)}
                 >
-                  <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
-                    <span className="font-semibold">{`Page ${currentRightPage}`}</span> — {`Cell ${cell.id}`} / <span className="text-[#7d5b3a]">{cell.type}</span>
-                  </div>
+
+                  { 
+                    DevMode === true && (
+                      <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
+                        <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
+                        <span className="text-[#7d5b3a]">{cell.type}</span>
+                      </div>
+                    )
+                  }
 
                   {cell.type === "text" && (
                     <textarea
