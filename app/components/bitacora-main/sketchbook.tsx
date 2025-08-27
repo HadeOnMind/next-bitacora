@@ -36,6 +36,7 @@ merged: boolean,
 selected: boolean,
 span: string,
 hidden: boolean,
+image: string,
 type: "empty" | "image" | "text" | "canvas",
 canMerge: boolean,
 };
@@ -64,6 +65,7 @@ const [Cells, SetCells] = useState<cell[]>(
       hidden: false,
       canMerge: false,
       selected: false,
+      image: "",
     };
   })
 );
@@ -377,8 +379,10 @@ return (
 
       <div className={styles.stain} />
 
-      <div className="flex gap-8 items-start justify-center">
+      <div className="flex gap-8 items-stretch justify-center relative">
+
         {/* Left Page */}
+
         <div className={`${styles.pageInner} ${styles.paperTexture} rounded-xl border-2 border-[#d6b48a] p-6 max-w-[520px] w-full`}>
           <div className="relative">
             <div className="absolute -left-4 top-6 w-6 h-12 rounded-sm bg-[#dcb67a] opacity-10 transform rotate-3" />
@@ -392,7 +396,7 @@ return (
                 <div
                   key={cell.id}
                   className={twMerge(
-                    "relative bg-[#fff7ea] p-4 rounded-lg shadow-sm border border-[#e1ccb0] hover:translate-y-[-2px] transition-transform duration-180",
+                    "relative flex items-stretch justify-stretch bg-[#fff7ea] rounded-lg shadow-sm border border-[#e1ccb0] hover:translate-y-[-2px] transition-transform duration-180 h-full w-full overflow-hidden",
                     cell.span !== "empty" ? cell.span : "col-span-1",
                     cell.selected ? "ring-4 ring-[#b7e3b6] ring-offset-2 ring-offset-[#fff6ea] shadow-[inset_0_6px_12px_rgba(0,0,0,0.05)]" : ""
                   )}
@@ -401,19 +405,18 @@ return (
 
                   { 
                     DevMode === true && (
-                      <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
+                      <div className="absolute top-1 left-1 text-xs serifTitle text-[#6b4f33] bg-white/60 px-1 rounded select-none z-10">
                         <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
-                        <span className="text-[#7d5b3a]">{cell.type}</span>
+                        <span className="text-[#a07142]">{cell.type}</span>
                       </div>
                     )
                   }
-                  
 
                   {cell.type === "text" && (
                     <textarea
                       placeholder="Write your note..."
-                      className="flex-grow w-full p-3 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner"
-                      style={{ fontFamily: "'Patrick Hand', cursive", fontSize: 15, minHeight: "64px" }}
+                      className="flex-1 w-full h-full p-3 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner"
+                      style={{ fontFamily: "'Patrick Hand', cursive", fontSize: 15 }}
                     />
                   )}
 
@@ -435,8 +438,7 @@ return (
 
 
 
-        <div className={styles.binding} />
-
+<div className={styles.binding} />
 
 
 
@@ -451,9 +453,8 @@ return (
                 <div
                   key={cell.id}
                   className={twMerge(
-                    "relative bg-[#fff7ea] p-4 rounded-lg shadow-sm border border-[#e1ccb0] hover:translate-y-[-2px] transition-transform duration-180",
+                    "relative flex items-stretch justify-stretch bg-[#fff7ea] rounded-lg shadow-sm border border-[#e1ccb0] hover:translate-y-[-2px] transition-transform duration-180 h-full w-full overflow-hidden",
                     cell.span !== "empty" ? cell.span : "col-span-1",
-
                     cell.selected ? "ring-4 ring-[#b7e3b6] ring-offset-2 ring-offset-[#fff6ea] shadow-[inset_0_6px_12px_rgba(0,0,0,0.05)]" : ""
                   )}
                   onClick={() => ToggleIndividualSelection(cell.id)}
@@ -461,9 +462,9 @@ return (
 
                   { 
                     DevMode === true && (
-                      <div className="text-xs serifTitle text-[#6b4f33] mb-2 select-none">
+                      <div className="absolute top-1 left-1 text-xs serifTitle text-[#6b4f33] bg-white/60 px-1 rounded select-none z-10">
                         <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
-                        <span className="text-[#7d5b3a]">{cell.type}</span>
+                        <span className="text-[#a07142]">{cell.type}</span>
                       </div>
                     )
                   }
@@ -471,21 +472,80 @@ return (
                   {cell.type === "text" && (
                     <textarea
                       placeholder="Write your note..."
-                      className="w-full h-full p-2 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner"
-                      style={{ minHeight: 64, fontFamily: "'Patrick Hand', cursive", fontSize: 15 }}
+                      className="flex-1 w-full h-full p-3 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner"
+                      style={{ fontFamily: "'Patrick Hand', cursive", fontSize: 15 }}
                     />
-                  )}
+                    )
+                  }
 
                   {cell.type === "image" && (
-                    <textarea
-                      placeholder="Image URL or description"
-                      className="w-full h-full p-2 rounded bg-[#fff5e8] border border-[#e7d6be] resize-none text-[#3c2f23] shadow-inner text-sm"
-                    />
+                    <div className="w-full h-full flex items-center justify-center relative">
+                      {!cell.image ? (
+                        <div className="flex flex-col items-center justify-center w-full h-full border-2 border-dashed border-[#d6b48a] rounded-lg hover:bg-[#fff8f0] transition">
+                          <button
+                            className="px-3 py-1 bg-[#a07142] text-white rounded-lg hover:bg-[#8a5f36] transition"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              document.getElementById(`file-${cell.id}`)?.click();
+                            }}
+                          >
+                            Add Image
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <img
+                            src={cell.image}
+                            alt=""
+                            className="absolute inset-0 w-full h-full object-cover rounded-lg pointer-events-none"
+                          />
+                          <button
+                            className="absolute bottom-2 right-2 px-2 py-1 bg-[#a07142] text-white text-xs rounded-lg hover:bg-[#8a5f36] transition"
+                            onClick={(e) => {
+                              
+                              document.getElementById(`file-${cell.id}`)?.click();
+                            }}
+                          >
+                            Change
+                          </button>
+                        </>
+                      )}
+
+                      <input
+                        id={`file-${cell.id}`}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              SetCells((prev) =>
+                                prev.map((c) =>
+                                  c.id === cell.id ? { ...c, image: reader.result as string } : c
+                                )
+                              );
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </div>
                   )}
+
+
+                  
+                  
+
 
                   {cell.type === "canvas" && (
                     <canvas width={300} height={150} className="border border-[#b49f89] bg-[#fdf7ea] rounded shadow-inner" />
                   )}
+
+
+
+
                 </div>
               )
             )}
@@ -493,7 +553,7 @@ return (
         </div>
       </div>
 
-      {/* Controls + handwritten footer */}
+
 
       <div className="flex justify-between mt-6 items-center px-6">
         <button 
