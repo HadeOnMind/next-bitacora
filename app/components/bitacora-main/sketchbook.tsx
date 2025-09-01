@@ -141,10 +141,16 @@ const ToggleIndividualSelection = (id: number) => {
 };
 
 
+
+//---------------------------------------------------------------------------------------------
+
+
+
+
 const MergeSelected = () => {
   const selectedCells = Cells.filter(cell => cell.selected);
-  const mergedCells = Cells.some(cell => cell.merged)
   const mergedSelectedCells = Cells.some(cell => cell.merged && cell.selected)
+  const samePageSelectedCells = selectedCells.every(cell => cell.page === selectedCells[0].page)
 
 
   if (selectedCells.length < 2 && mergedSelectedCells) {
@@ -156,10 +162,18 @@ const MergeSelected = () => {
   }
 
 
+  if (selectedCells.length >= 2 && !samePageSelectedCells){
+    alert("Cells are not on the same page")
+    return; 
+  }
+  
+
+
   if (mergedSelectedCells) {
     alert("One or many cells are already merged");
     return;
   }
+
 
 
   if (!areCellsContiguousX(selectedCells) && !areCellsContiguousY(selectedCells ) && !areCellsContiguousXY(selectedCells)) {
@@ -221,6 +235,16 @@ const MergeSelected = () => {
     return;
   }
 };
+
+
+
+
+
+
+//---------------------------------------------------------------------------------------------
+
+
+
 
 
 
@@ -408,6 +432,7 @@ return (
                       <div className="absolute top-1 left-1 text-xs serifTitle text-[#6b4f33] bg-white/60 px-1 rounded select-none z-10">
                         <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
                         <span className="text-[#a07142]">{cell.type}</span>
+                        <span className="text-[#a07142]">Cell page: {cell.page}</span>
                       </div>
                     )
                   }
@@ -420,6 +445,8 @@ return (
                     />
                   )}
 
+
+
                   {cell.type === "image" && (
                     <textarea
                       placeholder="Image URL or description"
@@ -427,9 +454,14 @@ return (
                     />
                   )}
 
+
+
+
                   {cell.type === "canvas" && (
                     <canvas width={300} height={150} className="border border-[#b49f89] bg-[#fdf7ea] rounded shadow-inner" />
                   )}
+
+
                 </div>
               )
             )}
@@ -462,9 +494,10 @@ return (
 
                   { 
                     DevMode === true && (
-                      <div className="absolute top-1 left-1 text-xs serifTitle text-[#6b4f33] bg-white/60 px-1 rounded select-none z-10">
-                        <span className="font-semibold">{`Page ${currentLeftPage}`}</span> — Cell {cell.id} /{" "}
+                       <div className="absolute top-1 left-1 text-xs serifTitle text-[#6b4f33] bg-white/60 px-1 rounded select-none z-10">
+                        <span className="font-semibold">{`Page ${currentRightPage}`}</span> — Cell {cell.id} /{" "}
                         <span className="text-[#a07142]">{cell.type}</span>
+                        <span className="text-[#a07142]">Cell page: {cell.page}</span>
                       </div>
                     )
                   }
