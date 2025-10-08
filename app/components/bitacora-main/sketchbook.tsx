@@ -373,7 +373,7 @@ const UnmergeSelected = () => {
 };
 
 
-const [DevMode, SetDevMode] = useState(true);
+const [DevMode, SetDevMode] = useState(false);
 
 const setdevmode = () => {
  SetDevMode(!DevMode);
