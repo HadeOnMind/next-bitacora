@@ -29,9 +29,9 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
   const setSetType = useCellActions((s) => s.setSetType)
 
   return (
-    <div className="min-h-screen bg-stone-100 font-sans p-4 pt-24">
+    <div className="min-h-screen bg-stone-100 font-sans p-4 pt-20 h-[100vh] flex flex-col ">
 
-      <div className="bg-white rounded-xl shadow-md p-4 h-[80vh] flex flex-col justify-between">
+      <div className="bg-white rounded-xl shadow-md p-4 flex  flex-col flex-grow justify-between">
         
      
         <div className="bg-blue-100 p-2 rounded-md">
@@ -39,7 +39,7 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
         </div>
 
         
-        <div className="flex-grow bg-white border border-dashed border-gray-300 my-4 flex items-center justify-center">
+        <div className=" max-w-[95%] mx-auto flex flex-grow bg-white border border-dashed border-gray-300 my-4 items-center justify-center">
 
             <Mainbook
             ref={mainBookRef}
@@ -64,7 +64,7 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
 
           
           
-          <ChangeDeploy></ChangeDeploy>
+          <ChangeDeploy/>
 
           <div className="bg-[#c7e6c4] rounded-xl shadow px-4 py-2 hover:bg-[#b3dbb0] transition">
             <button className="text-[#3e3e3e] font-medium" onClick={() => mainBookRef.current?.MergeSelected()}>Merge</button>
