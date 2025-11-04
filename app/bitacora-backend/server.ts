@@ -1,10 +1,26 @@
-import mongoose from "mongoose";
+import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+import { connectDB } from "./config/db";
+import sktbkroutes from "./routes/sktbkroutes";
+import sktbroutesStats from "./routes/info"
 
 dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 5000;
+connectDB();
+app.use(cors());
+app.use(express.json());
 
-const uri = process.env.MONGODB_URI || "";
 
-mongoose.connect(uri)
-  .then(() => console.log("✅ MongoDB connected successfully"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+app.get("/", (req, res) => {
+  res.json({ message: "Bitacora Running" });
+});
+
+app.use("/api/sketchbooks", sktbkroutes);
+app.use("/api/stats", sktbroutesStats);
+
+
+app.listen(PORT, () => {
+  console.log(`Server running here => http://localhost:${PORT}`);
+});

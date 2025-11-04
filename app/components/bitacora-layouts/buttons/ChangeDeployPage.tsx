@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { useCellActions } from '@/app/store/sketchbookStore';
-import { useEffect } from 'react';
 
 
 export default function ChangeDeploy() {

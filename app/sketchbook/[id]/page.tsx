@@ -1,32 +1,40 @@
 "use client";
-import { useRef } from "react";
+
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
 import ChangeDeploy from "@/app/components/bitacora-layouts/buttons/ChangeDeployPage";
-import ListDeploy from "@/app/components/bitacora-layouts/buttons/ListDeployPage";
+import AdvancedListDeploy from "@/app/components/bitacora-layouts/buttons/AdvncdlistDeploy";
 import Mainbook from "@/app/components/bitacora-main/sketchbook";
 import { useCellActions } from "@/app/store/sketchbookStore";
 
 
 
-
-type PageProps = {
-  params: { id: string };
-  searchParams?: { title?: string; desc?: string };
-
-};
-
 type SketchbookPage = {
 onMerge: () => void;
 };
-
-
-
-
-
 
 export default function SketchbookPage({onMerge}: SketchbookPage) {
 
   const mainBookRef = useRef<any>(null);
   const setSetType = useCellActions((s) => s.setSetType)
+
+  const searchparams = useSearchParams();
+  const [Title, setTitle] = useState("");
+  const [descript, setDescript] = useState("");
+
+
+
+  useEffect(() => {
+
+    const title = searchparams.get('title') || 'no tittle received'
+    const description = searchparams.get('description') || 'no description received'
+    setTitle(title);
+    setDescript(description);
+
+
+  }, [searchparams])
+
 
   return (
     <div className="min-h-screen bg-stone-100 font-sans p-4 pt-20 h-[100vh] flex flex-col ">
@@ -35,7 +43,8 @@ export default function SketchbookPage({onMerge}: SketchbookPage) {
         
      
         <div className="bg-blue-100 p-2 rounded-md">
-          <p>Top annotations / indicators</p>
+          <h1>{Title}</h1>
+          <h2>{descript}</h2>
         </div>
 
         

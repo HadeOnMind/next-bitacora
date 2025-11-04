@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
@@ -26,6 +28,26 @@ export default function Sidebar() {
     { label: "Configs", icon: <FiSettings /> },
     { label: "Profile", icon: <FiUser />, isProfile: true },
   ];
+
+    const [stats, setStats] = useState<{ totalBooks: number; totalPages: number; estimatedWeightMB: number }>({
+      totalBooks: 0,
+      totalPages: 0,
+      estimatedWeightMB: 0,
+    });
+
+
+    useEffect(() => {
+      async function fetchStats() {
+        try {
+          const res = await fetch("http://localhost:5000/api/stats");
+          const data = await res.json();
+          setStats(data);
+        } catch (err) {
+          console.error("Error fetching stats:", err);
+        }
+      }
+      fetchStats();
+    }, []);
 
 
 
@@ -109,11 +131,11 @@ export default function Sidebar() {
             <div className="px-3 py-2 bg-white/10 rounded-lg text-white">
               <div className="flex justify-between items-center text-sm font-medium mb-1">
                 <span>Used Space</span>
-                <span className="text-white/70">2.1 GB / 5 GB</span>
+                <span className="text-white/70">Coming soon...</span>
               </div>
               <div className="text-sm font-medium mb-1 flex justify-between">
                 <span>Total Books</span>
-                <span className="text-white/70">0</span>
+                <span className="text-white/70">{stats.totalBooks}</span>
               </div>
               <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
                 <div className="h-full bg-cyan-400 w-[50%]" />
