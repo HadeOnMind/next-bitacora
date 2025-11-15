@@ -63,14 +63,6 @@ export default function Sidebar() {
       <div>
 
         <div className="flex items-center gap-2 px-2 mb-4">
-          <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center text-cyan-500 font-bold">
-            B
-          </div>
-          {open && (
-            <div className="text-lg font-semibold tracking-wide">
-              Bitácora Studios
-            </div>
-          )}
         </div>
 
 

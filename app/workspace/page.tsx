@@ -2,6 +2,13 @@
 import { useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/navigation";
+import { MdAdd, MdWorkspaces } from "react-icons/md";
+import { BiBookAdd } from "react-icons/bi";
+import { BsPencilSquare } from "react-icons/bs";
+import { CgCommunity } from "react-icons/cg";
+
+
+
 
 
 export default function Home() {
@@ -10,7 +17,6 @@ export default function Home() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [Books, setSketchbooks] = useState<books[]>([]);
-
 
   
   type books = {
@@ -70,29 +76,62 @@ export default function Home() {
     }
   };
 
-  const CardEditor = (
-    <div className="bg-amber-100 rounded-xl shadow flex-col items-center">
-      <div
-        className="bg-amber-300 rounded-xl w-20 h-20 flex items-center justify-center cursor-pointer transition hover:bg-amber-400"
-        onClick={SetAdded}
-      >
-        <span className="text-stone-800 text-sm font-semibold select-none">
-          {added ? "Cancel..." : "➕ Add"}
-        </span>
-      </div>
 
-      <div className="flex flex-row">
-        <div>Delete</div>
-        <div>Update</div>
-      </div>
+const CardEditor = (
+  <div className="w-44 bg-sky-200 rounded-lg p-4 flex flex-col items-center space-y-4">
 
+    <button
+      onClick={SetAdded}
+      className={`w-full py-3 rounded-lg font-semibold transition-colors duration-200
+                  ${added ? "bg-blue-100 text-blue-700 hover:bg-cyan-200" : "bg-blue-400 text-stone-800 hover:bg-cyan-400"}`}
+    >
+      {added ? "Cancel" : (
+        <span className="flex items-center justify-center gap-1">
+          <MdAdd />
+          Add
+        </span>)}
+      </button>
+
+    <div className="flex justify-between w-full text-sm font-medium text-stone-700">
+      <button className="px-3 py-1 rounded hover:text-blue-600 hover:bg-blue-100 transition">
+        <div>DELETE</div>
+      </button>
+
+      <button className="px-2 py-1 rounded hover:text-blue-600 hover:bg-blue-100 transition flex even">
+        <BsPencilSquare/>
+        <div>EDIT</div>
+      </button>
     </div>
-  );
+
+  </div>
+);
+
+
+/*
+  const ToggleIndividualSelection = (id: number) => {
+
+    SetCells(p => p.map(cell =>
+      cell.id === id ? { ...cell, selected: !cell.selected } : cell,
+
+    )
+    
+  )
+  const selectedCell = Cells[id];
+  if (selectedCell.selected) {
+      console.log("Unselected cell: " + id)
+  } else {
+        console.log("Selected cell: " + id)
+  }
+
+};*/
 
   return (
     <div className="min-h-screen bg-stone-100 p-4 font-sans my-12">
       <div className="bg-stone-200 rounded-xl p-6 shadow-md max-w-8xl mx-auto">
-        <header className="text-3xl text-stone-700 font-bold mb-4">Bitacora</header>
+        <div className="flex">
+          <MdWorkspaces className="text-blue-500 h-10 w-10"/>
+          <header className="text-3xl text-stone-700 font-bold mb-4">Workspace</header>
+        </div>
 
         <div className="flex flex-row gap-6">
           <div className="flex-1 space-y-6">
@@ -105,7 +144,8 @@ export default function Home() {
 
                 {added && (
                   <div className="max-w-md p-4 bg-[#f9f6f1] border border-[#d6cfc3] rounded-lg shadow-sm space-y-3">
-                    <h3 className="text-xl font-semibold text-[#5a4633]">📘 Create a New Book</h3>
+                    <BiBookAdd className="text-blue-300 h-6 w-6"/>
+                    <h3 className="text-xl font-semibold text-[#5a4633]">Create a New Book</h3>
                     <input
                       type="text"
                       placeholder="Book title"
@@ -163,12 +203,15 @@ export default function Home() {
           </div>
 
           
-          <div className="w-56 flex flex-col gap-4 overflow-y-auto bg-gray-300 px-2 py-4 rounded-md">
-            <h2 className="text-lg font-semibold text-stone-700 mb-2">👥 Comunidad</h2>
+          <div className="w-56 flex flex-col gap-4 overflow-y-auto bg-teal-50 px-2 py-4 rounded-md">
+            <div className="flex">
+              <CgCommunity className="h-5 w-5 text-sky-300"/>
+              <h2 className="text-lg font-semibold text-stone-700 mb-2">Comunidad</h2>
+            </div>
             {[1, 2, 3].map((id) => (
               <div
                 key={id}
-                className="h-20 bg-amber-200 rounded-xl shadow-sm flex items-center justify-center text-stone-700 text-sm hover:bg-amber-200 cursor-pointer"
+                className="h-20 bg-sky-200 rounded-xl shadow-sm flex items-center justify-center text-stone-700 text-sm hover:bg-cyan-200 cursor-pointer"
               >
                 Usuario {id}
               </div>

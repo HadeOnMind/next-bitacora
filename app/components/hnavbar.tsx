@@ -28,9 +28,9 @@ export default function HorzNavbar() {
 
   return (
     <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-6 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="text-xl font-bold text-blue-600">My Bitacora</div>
+          <div className="text-xl font-bold text-blue-600">Bitacora Studios</div>
           <div className="hidden md:flex space-x-6">
             {visibleItems.map(item => (
               <Link
