@@ -1,0 +1,13 @@
+.customShadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+
+/* Using :global ensures these variables aren't renamed by the build tool */
+:global(:root) {
+  --color-primary: 248 250 252;   /* #f8fafc */
+  --color-secondary: 229 231 235; /* #e5e7eb */
+  --color-accent: 34 211 238;    /* #22d3ee */
+  --color-info: 190 242 100;      /* #bef264 */
+  --color-base: 21 94 117;       /* #155e75 */
+  
+  /* Shared Shadows */
+  --shadow-soft: 0 4px 20px -2px rgba(21, 94, 117, 0.1);
+}

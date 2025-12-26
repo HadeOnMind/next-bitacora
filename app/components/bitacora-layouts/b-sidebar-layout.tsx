@@ -7,7 +7,13 @@ import { BiSearch } from "react-icons/bi";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { FiSettings, FiUser, FiAward } from "react-icons/fi";
 import { BsFillBookFill, BsListTask, BsCalendarDate, BsPeople, BsPen } from "react-icons/bs";
-import { twMerge } from "tailwind-merge";
+
+import { useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -24,9 +30,9 @@ export default function Sidebar() {
 
 
   const bottomItems = [
-    { label: "Achievements", icon: <FiAward /> },
-    { label: "Configs", icon: <FiSettings /> },
-    { label: "Profile", icon: <FiUser />, isProfile: true },
+    { label: "Achievements", icon: <FiAward />, href: "/Achievements"  },
+    { label: "Configs", icon: <FiSettings />, href: "workspace/config" },
+    { label: "Profile", icon: <FiUser />, isProfile: true, href: "/user-profile"  },
   ];
 
     const [stats, setStats] = useState<{ totalBooks: number; totalPages: number; estimatedWeightMB: number }>({
@@ -150,9 +156,10 @@ export default function Sidebar() {
       <ul className="flex flex-col gap-3">
         <hr className="border-white/30 mb-0" />
 
-        {bottomItems.map(({ label, icon, isProfile }) => (
-          <li
+        {bottomItems.map(({ label, icon, isProfile, href }) => (
+          <Link
             key={label}
+            href={href}
             className={twMerge(
               "flex items-center gap-2 cursor-pointer hover:text-cyan-300 px-2",
               isProfile && "bg-white/10 rounded-lg py-1"
@@ -164,8 +171,9 @@ export default function Sidebar() {
                 {label}
               </span>
             )}
-          </li>
+          </Link>
         ))}
+
       </ul>
 
   
