@@ -17,7 +17,9 @@ import { usePathname } from 'next/navigation';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
-
+  const path = usePathname()
+  const isActive = (href: string) =>
+    path === href || path.startsWith(href + '/');
 
   const topItems = [
     { label: "My Sketchbooks", icon: <BsFillBookFill /> },
@@ -30,9 +32,9 @@ export default function Sidebar() {
 
 
   const bottomItems = [
-    { label: "Achievements", icon: <FiAward />, href: "/Achievements"  },
-    { label: "Configs", icon: <FiSettings />, href: "workspace/config" },
-    { label: "Profile", icon: <FiUser />, isProfile: true, href: "/user-profile"  },
+    { label: "Achievements", icon: <FiAward />, href: "/workspace/Achievements"},
+    { label: "Configs", icon: <FiSettings />, href: "/workspace/config"},
+    { label: "Profile", icon: <FiUser />, href: "/workspace/user-profile"},
   ];
 
     const [stats, setStats] = useState<{ totalBooks: number; totalPages: number; estimatedWeightMB: number }>({
@@ -156,18 +158,18 @@ export default function Sidebar() {
       <ul className="flex flex-col gap-3">
         <hr className="border-white/30 mb-0" />
 
-        {bottomItems.map(({ label, icon, isProfile, href }) => (
+        {bottomItems.map(({ label, icon, href }) => (
           <Link
             key={label}
             href={href}
             className={twMerge(
               "flex items-center gap-2 cursor-pointer hover:text-cyan-300 px-2",
-              isProfile && "bg-white/10 rounded-lg py-1"
+              isActive(href) && "bg-white/10 rounded-lg py-1"
             )}
           >
             <span>{icon}</span>
             {open && (
-              <span className={isProfile ? "font-semibold" : ""}>
+              <span className={isActive(href) ? "font-semibold" : ""}>
                 {label}
               </span>
             )}
