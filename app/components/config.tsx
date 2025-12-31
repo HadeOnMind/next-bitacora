@@ -58,27 +58,29 @@ export default function configComp() {
 
             <div className="flex-col">
                 
-                <div> 
-                    Title 
+                <div className="text-2xl font-bold mb-6 text-gray-100"> 
+                    CONFIGURATIONS 
                 </div>
 
-                <div className="flex row space-x-1">
-                    {configItems.map(item => (
-                        <ul
-                        key={item.label}
-                        onClick={() => {handleSetOption(item.label)}}
-                        className={twMerge("font-bold rounded-t-lg  text-md w-38 h-16 bg-[#5a7299] text-[#ffffff] justify-center text-center",
-                            activeOption == item.label && "bg-cyan-900"
-                        )
-                        }>
-                        {item.label}
-                        </ul>
-                        
-                    ))}
+                <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4 space-x-0.5">
+                {configItems.map(item => (
+                    <button
+                    key={item.label}
+                    onClick={() => handleSetOption(item.label)}
+                    className={twMerge(
+                        "px-6 py-3 text-sm font-medium transition-colors border-b-2 rounded-t-lg bg-emerald-300",
+                        activeOption === item.label
+                        ? "border-cyan-500 text-cyan-400"
+                        : "border-transparent text-gray-400 hover:text-white hover:border-gray-500"
+                    )}
+                    >
+                    {item.label}
+                    </button>
+                ))}
                 </div>
 
 
-                <div className="bg-[#374151]">
+                <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
 
                     {handleItemView(activeOption)}
 
