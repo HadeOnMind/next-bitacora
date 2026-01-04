@@ -17,7 +17,10 @@ export default function Home() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [Books, setSketchbooks] = useState<books[]>([]);
+  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
 
+
+  const [mode, SetMode] = useState<"none" | "delete" | "edit">( "none" ); 
   
   type books = {
     _id?: string;
@@ -29,7 +32,15 @@ export default function Home() {
     updatedAt?: string;
   };
 
- 
+ const toggleBookSelection = (id: string) => {
+  setSelectedBooks(prev =>
+    prev.includes(id)
+      ? prev.filter(x => x !== id)
+      : [...prev, id]
+  );
+};
+
+
   useEffect(() => {
     async function fetchBooks() {
       try {
@@ -76,54 +87,72 @@ export default function Home() {
     }
   };
 
+const HandleBookClick = (id: string, title: string, descript: string) => {
+  if (mode === "none") {
+    router.push(`/sketchbook/${id}?title=${title}&desc=${descript}`);
+    return;
+  }
+
+  toggleBookSelection(id)
+}
+
+
+const addbutton = (
+  <button
+    onClick={SetAdded}
+    className={`w-full py-3 rounded-lg font-semibold transition-colors duration-200
+                ${added ? "bg-blue-100 text-blue-700 hover:bg-cyan-200"
+                        : "bg-blue-400 text-stone-800 hover:bg-cyan-400"}`}
+  >
+    {added ? (
+      "Cancel"
+    ) : (
+      <span className="flex items-center justify-center gap-1">
+        <MdAdd />
+        Add
+      </span>
+    )}
+  </button>
+);
+
+const deletebutton = (
+  <button
+    onClick={() => {
+      SetMode("delete");
+      setSelectedBooks([]);
+    }}
+    className="px-3 py-1 bg-blue-200 text-cyan rounded shadow hover:bg-blue-100"
+  >
+    <div>{mode === "delete" ? "DELETING BOOKS" : "DELETE"}</div>
+  </button>
+);
 
 const CardEditor = (
   <div className="w-44 bg-sky-200 rounded-lg p-4 flex flex-col items-center space-y-4">
 
-    <button
-      onClick={SetAdded}
-      className={`w-full py-3 rounded-lg font-semibold transition-colors duration-200
-                  ${added ? "bg-blue-100 text-blue-700 hover:bg-cyan-200" : "bg-blue-400 text-stone-800 hover:bg-cyan-400"}`}
-    >
-      {added ? "Cancel" : (
-        <span className="flex items-center justify-center gap-1">
-          <MdAdd />
-          Add
-        </span>)}
-      </button>
+    
+    {mode === "none" && addbutton}
 
-    <div className="flex justify-between w-full text-sm font-medium text-stone-700">
-      <button className="px-3 py-1 rounded hover:text-blue-600 hover:bg-blue-100 transition">
-        <div>DELETE</div>
-      </button>
+    <div className="flex justify-between items-center w-full text-sm font-medium text-stone-700">
 
-      <button className="px-2 py-1 rounded hover:text-blue-600 hover:bg-blue-100 transition flex even">
-        <BsPencilSquare/>
-        <div>EDIT</div>
+      
+      {deletebutton}
+
+     
+      <button
+        onClick={() => {
+          SetMode("edit");
+          setSelectedBooks([]);
+        }}
+        className="bg-blue-300 px-2 py-1 rounded hover:text-blue-600 hover:bg-blue-200 transition"
+      >
+        EDIT
       </button>
     </div>
 
   </div>
 );
 
-
-/*
-  const ToggleIndividualSelection = (id: number) => {
-
-    SetCells(p => p.map(cell =>
-      cell.id === id ? { ...cell, selected: !cell.selected } : cell,
-
-    )
-    
-  )
-  const selectedCell = Cells[id];
-  if (selectedCell.selected) {
-      console.log("Unselected cell: " + id)
-  } else {
-        console.log("Selected cell: " + id)
-  }
-
-};*/
 
   return (
     <div className="min-h-screen bg-stone-100 p-4 font-sans my-12">
@@ -138,7 +167,7 @@ const CardEditor = (
             
 
             <section className="bg-amber-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold text-amber-700 mb-2">Recientes</h2>
+              <h2 className="text-xl font-semibold text-blue-700 mb-2">Recientes</h2>
               <div className="flex gap-4 overflow-x-auto">
                 {CardEditor}
 
@@ -172,11 +201,10 @@ const CardEditor = (
                 {Books.map((book) => (
                   <div
                     key={book._id}
-                    onClick={() =>
-                      router.push(`/sketchbook/${book._id}?title=${book.title}&desc=${book.description}`)
-                    }
                     className={twMerge(
-                      "min-w-[200px] p-4 bg-[#fffaf4] border border-[#d6cfc3] rounded-lg shadow hover:shadow-md transition space-y-2"
+                      "min-w-[200px] p-4 bg-[#fffaf4] border rounded-lg shadow transition cursor-pointer",
+                      mode !== "none" && "hover:border-blue-400",
+                      selectedBooks.includes(book._id) && "border-blue-500 ring-2 ring-blue-300"
                     )}
                   >
                     <h4 className="text-lg font-bold text-[#5a4633]">{book.title}</h4>
