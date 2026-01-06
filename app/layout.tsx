@@ -28,7 +28,10 @@ export default function RootLayout({
   return (
     <html>
       <body className={`${geistSans.variable} ${geistMono.variable} bg-slate-500`}>
-        {children}
+        <div>
+          {children}
+          <HorzNavbar/>
+        </div>
       </body>
     </html>
   );

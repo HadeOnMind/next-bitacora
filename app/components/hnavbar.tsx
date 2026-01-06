@@ -7,11 +7,10 @@ import { usePathname } from 'next/navigation';
 
 export default function HorzNavbar() {
   const navItems = [
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/dashboard/about' },
-    { label: 'Services', href: '/dashboard/services' },
-    { label: 'Contact', href: '/dashboard/contact' },
+    { label: 'About', href: '/info/about' },
+    { label: 'Services', href: '/info/services' },
+    { label: 'Contact', href: '/info/contact' },
+    { label: 'Reach', href: '/info/reach' },
     { label: 'dev', href: '/workspace/dev' },
   ];
 
@@ -30,7 +29,7 @@ export default function HorzNavbar() {
     <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="text-xl font-bold text-blue-600">My Bitacora</div>
+          <Link href={"/"}><div className="text-xl font-bold text-blue-600">My Bitacora</div></Link>
           <div className="hidden md:flex space-x-6">
             {visibleItems.map(item => (
               <Link
